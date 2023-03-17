@@ -24,22 +24,8 @@ st.set_page_config(layout = "wide")
 st.title("Air quality dashboard")
 st.text('This is a dashboard displaying air quality data in Tower Hamlets. Data is provided by the Environmental Research Group (ERG) part of the School of Biomedical Science at King’s College London ')
 
-st_autorefresh(interval=10*60*1000, key="api_update")
+st_autorefresh(interval=30*60*1000, key="api_update")
 
-db = sqlite_utils.Database("air-sensors.db")
-
-
-#%%
-image = functions.get_image("logo.png") # path of the file
-st.sidebar.image(image, use_column_width=True)
-st.sidebar.header("Filter Your Data")
-
-pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2', 'Ozone'))
-
-if pollutant == 'NO2':
-    st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
-
-#%%
 
 functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='NO2_hourly',pk=('@MeasurementDateGMT', '@Site'),
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
@@ -49,9 +35,9 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
     not_null={"@Year", "@Value", "@SiteName"},
     column_order=("@Year", "@Value", "@SiteName"))
 
-#%%
+db = sqlite_utils.Database("air-sensors.db")
 
-# %%
+#%%
 
 # EXTRACT THE SITES IN TOWER HAMLETS
 #api is link between between us and database 
@@ -87,23 +73,38 @@ while StartWeekDate > StartDate :
         StartWeekDate = EndWeekDate - timedelta(weeks = 2)
 
 # %%
-years=list(range(1994,2024))
+#years=list(range(1994,2024))
 
-for year in years:    
-    url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
-    print(url)
-    req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-    print(req)
-    j = req.json()
-    l=j['SiteObjectives']['Site']
-    rows=[]
-    for data in l:
-        data_row=data['Objective']
-        n=data['@SiteName']
+#for year in years:    
+#   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
+#   print(url)
+#    req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+#    print(req)
+#    j = req.json()
+#    l=j['SiteObjectives']['Site']
+#    rows=[]
+#    for data in l:
+#        data_row=data['Objective']
+#        n=data['@SiteName']
 
-        for row in data_row:
-            row['@SiteName']= n
-            rows.append(row)
+#        for row in data_row:
+#            row['@SiteName']= n
+#            rows.append(row)
     
-    filtered = [a for a in rows if a['@SpeciesCode']=='NO2']
-    db['NO2_annually'].upsert_all(filtered,pk=('@Year', '@SiteName', '@ObjectiveName'))
+#    filtered = [a for a in rows if a['@SpeciesCode']=='NO2']
+#    db['NO2_annually'].upsert_all(filtered,pk=('@Year', '@SiteName', '@ObjectiveName'))
+
+
+#%%
+image = functions.get_image("logo.png") # path of the file
+st.sidebar.image(image, use_column_width=True)
+st.sidebar.header("Filter Your Data")
+
+pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2', 'Ozone'))
+
+if pollutant == 'NO2':
+    st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
+
+if pollutant== 'NO2':
+     tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
+
