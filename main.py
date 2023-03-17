@@ -34,7 +34,7 @@ image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
 st.sidebar.header("Filter Your Data")
 
-pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2'))
+pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2', 'Ozone'))
 
 if pollutant == 'NO2':
     st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
