@@ -103,8 +103,6 @@ st.sidebar.header("Filter Your Data")
 pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2', 'Ozone'))
 
 if pollutant == 'NO2':
-    st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
-
-if pollutant== 'NO2':
-     tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
+    site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
+    tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
 
