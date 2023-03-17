@@ -34,7 +34,7 @@ image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
 st.sidebar.header("Filter Your Data")
 
-st.sidebar.selectbox('Choose a pollutant',('NO2'))
+st.sidebar.selectbox('Choose a pollutant',('NO2', 'Ozone'))
 
 #%%
 
