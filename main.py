@@ -105,7 +105,7 @@ site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackw
 
 
 
-if pollutant=='NO2' and site=='Mile End Road':
+if site=='Mile End Road':
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
         st.write('Mile end')
