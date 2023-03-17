@@ -1,0 +1,12 @@
+streamlit
+pandas
+numpy
+matplotlib
+seaborn
+requests
+datetime
+sqlite_utils
+plotly.express
+streamlit_autorefresh
+functions
+image
