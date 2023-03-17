@@ -100,19 +100,17 @@ image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
 st.sidebar.header("Filter Your Data")
 
-pollutant= st.sidebar.selectbox('Choose a pollutant',options= ('NO2', 'Ozone'))
+pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
+site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
 
 if pollutant == 'NO2':
-    site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
     tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
-elif pollutant =='Ozone':
-    st.write('to be continued...')
-
-if site=='Mile End Road':
-     with tab1:
+    if site=='Mile End Road':
+     
+      with tab1:
         st.write('Mile end')
 
-     with tab2:
+      with tab2:
 
         fig2=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
@@ -152,3 +150,8 @@ if site=='Mile End Road':
         fig2.show()
 
         st.plotly_chart(fig2,theme=None)
+
+
+elif pollutant =='Ozone':
+    st.write('to be continued...')
+
