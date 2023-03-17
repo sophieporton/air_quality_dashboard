@@ -103,15 +103,14 @@ st.sidebar.header("Filter Your Data")
 pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
 site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
 
-if pollutant == 'NO2':
-    tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
+
 
 if pollutant=='NO2' and site=='Mile End Road':
-     
-      with tab1:
+     tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
+     with tab1:
         st.write('Mile end')
 
-      with tab2:
+     with tab2:
 
         fig2=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
