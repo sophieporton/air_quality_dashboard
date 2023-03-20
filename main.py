@@ -155,6 +155,7 @@ if pollutant =='NO2':
      
 
      with tab2:
+        #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
         fig2=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
@@ -164,7 +165,7 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig2.update_layout(title='',
+        fig2.update_layout(title='Line plot showing hourly NO2 measurements for the past 2 weeks for the currently active NO2 sensors in Tower Hamlets',
                             xaxis_title='Year',
                             yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)'
                             ,
