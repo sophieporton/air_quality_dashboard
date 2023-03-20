@@ -178,7 +178,7 @@ if pollutant =='NO2':
                             yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)'
                             ,
                             #legend=dict(orientation="h",
-                            #           entrywidth=250,
+                            # #          entrywidth=250,
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
                             legend_title_text= '', font=dict(size= 17)
                             )
