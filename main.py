@@ -228,7 +228,7 @@ if pollutant =='NO2':
         fig3.show()
 
         st.plotly_chart(fig3,theme=None)
-with tab4:
+     with tab4:
         fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
