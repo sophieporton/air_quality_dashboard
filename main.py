@@ -191,7 +191,7 @@ if pollutant =='NO2':
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
                             legend_title_text= 'Filter by site', font=dict(size= 17)
                             )
-
+        fig4.layout.legend.tracegroupgap = 10
         fig4.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
         fig4.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
