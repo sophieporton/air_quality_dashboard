@@ -29,3 +29,27 @@ def sql_to_pandas(db, sql_command,):
 def get_image(path:str)->Image:
     image = Image.open(path)
     return image
+
+#%%
+def delete_all_tasks(conn):
+    """
+    Delete all rows in the tasks table
+    :param conn: Connection to the SQLite database
+    :return:
+    """
+    sql = 'DELETE FROM NO2_hourly'
+    cur = conn.cursor()
+    cur.execute(sql)
+    conn.commit()
+
+#%%
+def create_connection(db_file):
+    """ create a database connection to the SQLite database
+        specified by the db_file
+    :param db_file: database file
+    :return: Connection object or None
+    """
+    conn = sqlite3.connect(db_file)
+
+    return conn
+# %%
