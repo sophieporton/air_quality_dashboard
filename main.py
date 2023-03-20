@@ -119,7 +119,7 @@ if pollutant =='NO2':
      st.write('''The Air Quality Standards Regulations 2010 require that the annual mean concentration of NO2 must not exceed 40 µg/m3 and that there should be no more than 18
      exceedances of the hourly mean limit value (concentrations above 200 µg/m3) in a single year.''')
      
-     tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value" "Capture Rate"])
+     tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value", "Capture Rate"])
      with tab1:
         #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
      
