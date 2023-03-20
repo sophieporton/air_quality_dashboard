@@ -141,7 +141,7 @@ if pollutant =='NO2':
                         legend_title_text= '', font=dict(size= 17)
                         )
 
-        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),)
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
         fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
         #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
@@ -149,7 +149,7 @@ if pollutant =='NO2':
         fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
         fig.update_layout(hoverlabel = dict(
-            font_size = 16),yaxis=dict(tickmode = 'linear', tick0 = 50,dtick = 10))
+            font_size = 16),yaxis=dict(tickmode = 'linear', tick0 = 10,dtick = 10))
 
         fig.add_hline(y=40,line_dash='dot')
 
