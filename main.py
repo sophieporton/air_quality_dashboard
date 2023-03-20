@@ -111,6 +111,7 @@ pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
 
 
 if pollutant =='NO2':
+     st.subheader('Nitrogen dioxide (NO2)')
      st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
      Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. NO2 can exacerbate the symptoms of those already suffering from lung or heart conditions. 
      NO2 can also cause changes to the environment
