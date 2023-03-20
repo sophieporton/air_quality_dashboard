@@ -23,7 +23,10 @@ from PIL import Image
 st.set_page_config(layout = "wide")
 st.title("Air quality dashboard")
 st.write('''This is a dashboard displaying air quality data in Tower Hamlets.
- The air sensor data used can be acessed via the following API https://api.erg.ic.ac.uk/airquality/help, and is provided by the Environmental Research Group (ERG) at King’s College London.
+ This information has been obtained from the Environmental Research Group of Kings College
+London (http://www.erg.kcl.ac.uk), using data from the London Air Quality Network
+(http://www.londonair.org.uk). This information is licensed under the terms of the Open
+Government Licence. 
   ''')
 
 st_autorefresh(interval=30*60*1000, key="api_update")
@@ -110,6 +113,9 @@ pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
 if pollutant =='NO2':
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
+
+        st.write('''
+        ''')
      
         fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
@@ -122,7 +128,7 @@ if pollutant =='NO2':
                         )
 
         fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),)
-        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18), range = [1,90])
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18), range = [1,85])
 
         #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
 
