@@ -219,7 +219,7 @@ if pollutant =='NO2':
                             )
 
         fig3.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig3.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig3.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18), range = [0,63])
 
         print("plotly express hovertemplate:", fig3.data[0].hovertemplate)
 
@@ -266,8 +266,6 @@ if pollutant =='NO2':
 
         fig4.update_layout(hoverlabel = dict(
                 font_size = 16))
-
-        fig4.add_hline(y=18,line_dash='dot')
 
         #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
