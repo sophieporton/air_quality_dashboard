@@ -22,7 +22,9 @@ from PIL import Image
 
 st.set_page_config(layout = "wide")
 st.title("Air quality dashboard")
-st.write('This is a dashboard displaying air quality data in Tower Hamlets. Data is provided by the Environmental Research Group (ERG) part of the School of Biomedical Science at King’s College London ')
+st.write('''This is a dashboard displaying air quality data in Tower Hamlets.
+ The air sensor data used can be acessed via the following API https://api.erg.ic.ac.uk/airquality/help, and is provided by the Environmental Research Group (ERG), part of the School of Biomedical Science at King’s College London.
+  ''')
 
 st_autorefresh(interval=30*60*1000, key="api_update")
 
