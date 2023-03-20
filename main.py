@@ -101,14 +101,41 @@ st.sidebar.image(image, use_column_width=True)
 st.sidebar.header("Filter Your Data")
 
 pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
-site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
+#site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
 
 
 
 if pollutant =='NO2':
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
-        st.write('Mile end')
+     
+        fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
+
+        fig.update_layout(title='',
+                        xaxis_title='Measurement Date',
+                        yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
+                        legend=dict(orientation="h", entrywidth=250,
+                        yanchor="bottom", y=1.02, xanchor="right", x=1),
+                        legend_title_text= '', font=dict(size= 18)
+                        )
+
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+        #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+
+        fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+        fig.update_layout(hoverlabel = dict(
+            font_size = 16))
+
+        fig.add_hline(y=40,line_dash='dot')
+
+        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+        fig.show()
+
+        st.plotly_chart(fig, theme=None)    
 
      with tab2:
 
@@ -150,6 +177,46 @@ if pollutant =='NO2':
         fig2.show()
 
         st.plotly_chart(fig2,theme=None)
+    
+     with tab3:
+        fig4=px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        *
+        FROM
+        NO2_annually
+        WHERE
+        [@ObjectiveName] = 'Capture Rate (%)'
+        AND
+        ([@SiteName] = 'Tower Hamlets - Mile End Road'
+        OR
+            [@SiteName] = 'Tower Hamlets - Blackwall')
+                                                                                    """),
+                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700, barmode='group')
+
+        fig4.update_layout(title='',
+                            xaxis_title='Year',
+                            yaxis_title='Capture Rate (%)',
+                            legend=dict(orientation="h", entrywidth=250,
+                            yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 18)
+                            )
+
+        fig4.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig4.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+        print("plotly express hovertemplate:", fig4.data[0].hovertemplate)
+
+        fig4.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+        fig4.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+        fig4.add_hline(y=18,line_dash='dot')
+
+        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+        fig4.show()
+
+        st.plotly_chart(fig4,theme=None)
 
 
 elif pollutant =='Ozone':
