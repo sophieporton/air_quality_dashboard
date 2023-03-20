@@ -78,26 +78,26 @@ while StartWeekDate > StartDate :
         StartWeekDate = EndWeekDate - timedelta(weeks = 2)
 
 # %%
-#years=list(range(1994,2024))
+years=list(range(1994,2024))
 
-#for year in years:    
-#   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
-#   print(url)
-#    req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-#    print(req)
-#    j = req.json()
-#    l=j['SiteObjectives']['Site']
-#    rows=[]
-#    for data in l:
-#        data_row=data['Objective']
-#        n=data['@SiteName']
+for year in years:    
+   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
+   print(url)
+   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+   print(req)
+   j = req.json()
+   l=j['SiteObjectives']['Site']
+   rows=[]
+   for data in l:
+        data_row=data['Objective']
+        n=data['@SiteName']
 
-#        for row in data_row:
-#            row['@SiteName']= n
-#            rows.append(row)
+        for row in data_row:
+            row['@SiteName']= n
+            rows.append(row)
     
-#    filtered = [a for a in rows if a['@SpeciesCode']=='NO2']
-#    db['NO2_annually'].upsert_all(filtered,pk=('@Year', '@SiteName', '@ObjectiveName'))
+   filtered = [a for a in rows if a['@SpeciesCode']=='NO2']
+   db['NO2_annually'].upsert_all(filtered,pk=('@Year', '@SiteName', '@ObjectiveName'))
 
 
 #%%
