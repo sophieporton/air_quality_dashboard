@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import sqlite3
 import functions
+from functions import create_connection
 import plotly.express as px
 from streamlit_autorefresh import st_autorefresh
 from PIL import Image
@@ -51,6 +52,10 @@ js = req.json() #json is like a python dictionary
 sites = js['Sites']['Site'] #turns dictionary into list 
 
 # %%
+conn=create_connection('air-sensors.db')
+functions.delete_all_no2annually(conn)
+
+#%%
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
@@ -204,7 +209,7 @@ if pollutant =='NO2':
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
         fig3.update_layout(title={
-        'text': 'Line plot showing the number of times the hourly mean limit value was exceed each year','xanchor': 'left',
+        'text': 'Line plot showing the number of times the hourly mean limit value was exceeded each year','xanchor': 'left',
         'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
                             yaxis_title='Count',
