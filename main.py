@@ -126,7 +126,9 @@ if pollutant =='NO2':
 
         fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
-        fig.update_layout(title='Line plot showing hourly NO2 measurements for the past 2 weeks for the currently active NO2 sensors in Tower Hamlets',
+        fig.update_layout(title={
+        'text': 'Line plot showing hourly NO2 measurements for the past 2 weeks','xanchor': 'left',
+        'yanchor': 'top','x':0.05,'y':0.98},
                         xaxis_title='Measurement Date',
                         yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
                         #legend=dict(orientation="h", entrywidth=250,
