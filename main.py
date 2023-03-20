@@ -166,7 +166,7 @@ if pollutant =='NO2':
 
         fig2.update_layout(title={
         'text': 'Line plot showing annual mean NO2 measurements in Tower Hamlets','y':0.9,'x':0.5,'xanchor': 'center',
-        'yanchor': 'top','size':'18'},
+        'yanchor': 'top'},
                             xaxis_title='Year',
                             yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)'
                             ,
