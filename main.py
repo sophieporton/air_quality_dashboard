@@ -114,10 +114,11 @@ if pollutant =='NO2':
      st.subheader('Nitrogen dioxide (NO2)')
      st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
      Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. 
-     NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions, and cause changes to the environment such as soil chemistry.
-     The Air Quality Standards Regulations 2010 require that the annual mean concentration of NO2 must not exceed 40 µg/m3 and that there should be no more than 18
-     exceedances of the hourly mean limit value (concentrations above 200 µg/m3) in a single year.
-        ''')
+     NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions, and cause changes to the environment such as soil chemistry.''')
+     
+     st.write('''The Air Quality Standards Regulations 2010 require that the annual mean concentration of NO2 must not exceed 40 µg/m3 and that there should be no more than 18
+     exceedances of the hourly mean limit value (concentrations above 200 µg/m3) in a single year.''')
+     
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
         st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.
