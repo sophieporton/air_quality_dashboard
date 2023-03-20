@@ -199,7 +199,7 @@ if pollutant =='NO2':
         NO2_annually
         WHERE
         [@ObjectiveName] = '200 ug/m3 as a 1 hour mean, not to be exceeded more than 18 times a year'
-        )
+        
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
@@ -271,3 +271,5 @@ if pollutant =='NO2':
 if pollutant =='Ozone':
     st.write('to be continued...')
 
+
+# %%
