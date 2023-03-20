@@ -179,6 +179,8 @@ if pollutant =='NO2':
         NO2_annually
         WHERE
         [@ObjectiveName] = 'Capture Rate (%)'
+        AND
+        [@Year]<2023
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
