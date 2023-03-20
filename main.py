@@ -203,12 +203,14 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig3.update_layout(title='',
+        fig3.update_layout(title={
+        'text': 'Line plot showing the number of times the hourly mean limit value was exceed each year','xanchor': 'left',
+        'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
                             yaxis_title='Count',
-                            legend=dict(orientation="h", entrywidth=250,
-                            yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 18)
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
                             )
 
         fig3.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
