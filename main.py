@@ -179,7 +179,7 @@ if pollutant =='NO2':
         st.plotly_chart(fig2,theme=None)
     
      with tab3:
-        fig4=px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
         NO2_annually
@@ -190,7 +190,7 @@ if pollutant =='NO2':
         OR
             [@SiteName] = 'Tower Hamlets - Blackwall')
                                                                                     """),
-                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700, barmode='group')
+                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
         fig4.update_layout(title='',
                             xaxis_title='Year',
