@@ -119,7 +119,7 @@ if pollutant =='NO2':
      st.write('''The Air Quality Standards Regulations 2010 require that the annual mean concentration of NO2 must not exceed 40 µg/m3 and that there should be no more than 18
      exceedances of the hourly mean limit value (concentrations above 200 µg/m3) in a single year.''')
      
-     tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
+     tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value" "Capture Rate"])
      with tab1:
         #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
      
@@ -192,8 +192,43 @@ if pollutant =='NO2':
         fig2.show()
 
         st.plotly_chart(fig2,theme=None)
-    
      with tab3:
+        fig3=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        *
+        FROM
+        NO2_annually
+        WHERE
+        [@ObjectiveName] = '200 ug/m3 as a 1 hour mean, not to be exceeded more than 18 times a year'
+        )
+                                                                                    """),
+                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
+
+        fig3.update_layout(title='',
+                            xaxis_title='Year',
+                            yaxis_title='Count',
+                            legend=dict(orientation="h", entrywidth=250,
+                            yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 18)
+                            )
+
+        fig3.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig3.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+        print("plotly express hovertemplate:", fig3.data[0].hovertemplate)
+
+        fig3.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+        fig3.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+        fig3.add_hline(y=18,line_dash='dot')
+
+        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+        fig3.show()
+
+        st.plotly_chart(fig3,theme=None)
+with tab4:
         fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
@@ -233,7 +268,6 @@ if pollutant =='NO2':
 
         st.plotly_chart(fig4,theme=None)
 
-
-elif pollutant =='Ozone':
+if pollutant =='Ozone':
     st.write('to be continued...')
 
