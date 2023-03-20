@@ -127,7 +127,7 @@ if pollutant =='NO2':
         fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
         fig.update_layout(title={
-        'text': 'Line plot showing hourly NO2 measurements for the past 2 weeks','xanchor': 'left',
+        'text': 'Line plot showing hourly NO2 measurements for the past 2 weeks from active sensors in Tower Hamlets','xanchor': 'left',
         'yanchor': 'top','x':0.05,'y':0.98},
                         xaxis_title='Measurement Date',
                         yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
@@ -205,14 +205,16 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig4.update_layout(title='',
+        fig4.update_layout(title={
+        'text': 'Line plot showing annual capture rate of NO2 for the sensors in Tower Hamlets','xanchor': 'left',
+        'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
                             yaxis_title='Capture Rate (%)',
                             #legend=dict(orientation="h", entrywidth=250,
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
                             legend_title_text= '', font=dict(size= 17)
                             )
-        fig4.layout.legend.tracegroupgap = 10
+        #fig4.layout.legend.tracegroupgap = 10
         fig4.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
         fig4.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
