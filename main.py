@@ -121,13 +121,12 @@ if pollutant =='NO2':
      
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
-        st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.
-        ''')
+        #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
      
 
         fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
-        fig.update_layout(title='',
+        fig.update_layout(title='Line plot showing hourly NO2 measurements for the past 2 weeks for the currently active NO2 sensors in Tower Hamlets',
                         xaxis_title='Measurement Date',
                         yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
                         #legend=dict(orientation="h", entrywidth=250,
@@ -165,7 +164,7 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig2.update_layout(title='Line plot showing hourly NO2 measurements for the past 2 weeks for the currently active NO2 sensors in Tower Hamlets',
+        fig2.update_layout(title='Line plot showing annual mean NO2 measurements in Tower Hamlets',
                             xaxis_title='Year',
                             yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)'
                             ,
