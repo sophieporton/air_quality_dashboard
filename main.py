@@ -113,13 +113,14 @@ pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
 if pollutant =='NO2':
      st.subheader('Nitrogen dioxide (NO2)')
      st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
-     Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. NO2 can exacerbate the symptoms of those already suffering from lung or heart conditions. 
-     NO2 can also cause changes to the environment
+     Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. 
+     NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions,and cause changes to the environment such as soil chemistry.
         ''')
      tab1, tab2, tab3 = st.tabs(["Hourly", "Annually", "Capture Rate"])
      with tab1:
 
-        st.write('''
+        st.write('''The Air Quality Standards Regulations 2010 require that the annual mean concentration of NO2 must not exceed 40 µg/m3 and that there should be no more than 18
+          exceedances of the hourly mean limit value (concentrations above 200 µg/m3) in a single year.
         ''')
      
         fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
