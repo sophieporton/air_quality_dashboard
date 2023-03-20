@@ -149,7 +149,7 @@ if pollutant =='NO2':
         fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
         fig.update_layout(hoverlabel = dict(
-            font_size = 16),yaxis=dict(tickmode = 'linear', tick0 = 10,dtick = 10))
+            font_size = 16),yaxis=dict(zeroline=False))
 
         fig.add_hline(y=40,line_dash='dot')
 
