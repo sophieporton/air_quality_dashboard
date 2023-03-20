@@ -114,9 +114,9 @@ if pollutant =='NO2':
         fig.update_layout(title='',
                         xaxis_title='Measurement Date',
                         yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
-                        legend=dict(orientation="h", entrywidth=250,
-                        yanchor="bottom", y=1.02, xanchor="right", x=1),
-                        legend_title_text= '', font=dict(size= 18)
+                        #legend=dict(orientation="h", entrywidth=250,
+                        #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                        legend_title_text= 'Select a site', font=dict(size= 17)
                         )
 
         fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
@@ -154,7 +154,7 @@ if pollutant =='NO2':
                             #legend=dict(orientation="h",
                             #           entrywidth=250,
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 17)
+                            legend_title_text= 'Select a site', font=dict(size= 17)
                             )
 
         fig2.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
@@ -187,9 +187,9 @@ if pollutant =='NO2':
         fig4.update_layout(title='',
                             xaxis_title='Year',
                             yaxis_title='Capture Rate (%)',
-                            legend=dict(orientation="h", entrywidth=250,
-                            yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 18)
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= 'Select a site', font=dict(size= 17)
                             )
 
         fig4.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
