@@ -53,7 +53,7 @@ sites = js['Sites']['Site'] #turns dictionary into list
 
 # %%
 conn=create_connection('air-sensors.db')
-functions.delete_all_no2annually(conn)
+functions.delete_all_no2hourly(conn)
 
 #%%
 
@@ -158,7 +158,7 @@ if pollutant =='NO2':
         fig.show()
 
         st.plotly_chart(fig, theme=None)    
-     
+
 
      with tab2:
         #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')

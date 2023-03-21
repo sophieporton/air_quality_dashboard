@@ -31,7 +31,7 @@ def get_image(path:str)->Image:
     return image
 
 #%%
-def delete_all_no2annually(conn):
+def delete_all_no2hourly(conn):
     """
     Delete all rows in the tasks table
     :param conn: Connection to the SQLite database
