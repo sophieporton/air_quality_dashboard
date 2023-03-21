@@ -82,6 +82,14 @@ while StartWeekDate > StartDate :
         EndWeekDate = StartWeekDate
         StartWeekDate = EndWeekDate - timedelta(weeks = 2)
 
+
+#%%
+
+cur = conn.cursor() 
+last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
+last_row=float(last_row[0])
+
+
 # %%
 #years=list(range(1994,2024))
 
@@ -158,6 +166,13 @@ if pollutant =='NO2':
         fig.show()
 
         st.plotly_chart(fig, theme=None)    
+
+        if last_row > 40:
+            st.write('Mile End Road sensor is currently over target limit')
+        elif last_row < 40:
+            st.write('Mile End Road is currently within target')
+
+
 
 
      with tab2:
