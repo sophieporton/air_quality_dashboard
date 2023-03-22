@@ -90,9 +90,9 @@ last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
 last_row=float(last_row[0])
 
 if last_row > 40:
-    target='Above the target limit'
+    target='above the target limit'
 elif last_row < 40:
-    target='Within the target limit'
+    target='within the target limit'
 
 
 
@@ -177,7 +177,7 @@ if pollutant =='NO2':
 
             st.write(f'''Hourly NO2 measurements fluctuate with local weather and traffic conditions but mainly stay
             below the 40µgm3 target limit. Currently the only active sensor in Tower Hamlets is at Mile End Road, with
-            a latest reading of **{last_row}** which is :green[{target}]''')
+            a latest reading of **{last_row}** which is **:green[{target}]**''')
 
 
 
