@@ -264,12 +264,14 @@ if pollutant =='NO2':
 
         fig3.show()
 
+        st.plotly_chart(fig3,theme=None)
+
         st.write('''Instances of exceeding the hourly mean limit value (concentrations above 200 µg/m3) have decreased since 
         monitoring began in 1994. There have been no recorded instances of exceeding the hourly mean limit value since 2020, 
         and since 2007 no sites in Tower Hamlets have exceeded the target of 18 times per year. 
         ''')
 
-        st.plotly_chart(fig3,theme=None)
+        
      with tab4:
         fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
