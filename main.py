@@ -89,6 +89,12 @@ cur = conn.cursor()
 last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
 last_row=float(last_row[0])
 
+if last_row > 40:
+    target='Above the target limit'
+elif last_row < 40:
+    target='Within the target limit'
+
+
 
 # %%
 #years=list(range(1994,2024))
@@ -168,14 +174,10 @@ if pollutant =='NO2':
 
             st.plotly_chart(fig, theme=None)    
 
-            #if last_row > 40:
-            #   st.write('Mile End Road sensor is currently over target limit')
-            #elif last_row < 40:
-            #    st.write('Mile End Road is currently within target')
-            
-            st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
-     Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. 
-     NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions, and cause changes to the environment such as soil chemistry.''')
+
+            st.write(f'''Hourly NO2 measurements fluctuate with local weather and traffic conditions but mainly stay
+            below the 40µgm3 target limit. Currently the only active sensor in Tower Hamlets is at Mile End Road, with
+            a latest reading of **{last_row}** which is :green{target}''')
 
 
 
