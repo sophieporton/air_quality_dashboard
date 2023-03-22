@@ -32,7 +32,7 @@ Government Licence.
 
 st_autorefresh(interval=30*60*1000, key="api_update")
 
-
+#%%
 functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='NO2_hourly',pk=('@MeasurementDateGMT', '@Site'),
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
     column_order=("@MeasurementDateGMT", "@Value", "@Site"))
@@ -44,6 +44,10 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
 functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='O3_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
     not_null={"@Year", "@Value", "@SiteName"},
     column_order=("@Year", "@Value", "@SiteName"))
+
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='O3_hourly',pk=('@MeasurementDateGMT', '@Site'),
+    not_null={"@MeasurementDateGMT", "@Value", "@Site"},
+    column_order=("@MeasurementDateGMT", "@Value", "@Site"))
 
 
 db = sqlite_utils.Database("air-sensors.db")
@@ -89,6 +93,34 @@ while StartWeekDate > StartDate :
 
 #%%
 
+EndDate = date.today() + timedelta(days = 1)
+EndWeekDate = EndDate
+StartWeekDate = EndDate - timedelta(weeks = 2)
+StartDate = StartWeekDate - timedelta(days = 1)
+
+while StartWeekDate > StartDate :
+        for el in sites:
+            def convert(list):
+                list['@Value'] = float(list['@Value'])
+                list['@Site'] = el['@SiteName']
+                return list
+            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=O3/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
+            print(url)
+            req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+            print(req)
+            j = req.json()
+            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
+            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
+            if len(filtered) != 0:
+                filtered = map(convert, filtered)
+                filteredList = list(filtered)
+                db['O3_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
+        EndWeekDate = StartWeekDate
+        StartWeekDate = EndWeekDate - timedelta(weeks = 2)
+
+
+#%%
+
 cur = conn.cursor() 
 last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
 last_row=float(last_row[0])
@@ -102,29 +134,29 @@ elif last_row < 40:
 
 
 #%%
-years=list(range(1994,2024))
+#years=list(range(1994,2024))
 
-for year in years:    
-   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
-   print(url)
-   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-   print(req)
-   j = req.json()
-   l=j['SiteObjectives']['Site']
-   rows=[]
-   for data in l:
-        data_row=data['Objective']
-        n=data['@SiteName']
-
-        for row in data_row:
-            row['@SiteName']= n
-            rows.append(row)
-    
-   filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
-   db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
-   
-   filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
-   db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
+#for year in years:    
+#   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
+ #  print(url)
+#   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+#   print(req)
+#   j = req.json()
+#   l=j['SiteObjectives']['Site']
+#   rows=[]
+#   for data in l:
+#        data_row=data['Objective']
+#        n=data['@SiteName']
+#
+#        for row in data_row:
+#            row['@SiteName']= n
+#            rows.append(row)
+#    
+#   filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
+#   db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
+#   
+#   filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
+#   db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
  
 
 #%%
@@ -315,5 +347,77 @@ if pollutant =='NO2':
 if pollutant =='Ozone':
     st.write('to be continued...')
 
+
+# %%
+
+fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        *
+        FROM
+        O3_annually
+        WHERE
+        [@ObjectiveName] = '100 ug/m3 as an 8 hour mean, not to be exceeded more than 10 times a year'
+        
+                                                                                    """),
+                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
+
+fig5.update_layout(title={'text': 'Line plot showing annual mean O3 measurements in Tower Hamlets','xanchor': 'left',
+        'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Year',
+                            yaxis_title='Count'
+                            ,
+                            #legend=dict(orientation="h",
+                            # #          entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
+
+fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+#print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
+fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+fig5.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+fig5.add_hline(y=10,line_dash='dot')
+
+fig5.show()
+
+#
+# %%
+
+
+fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        *
+        FROM
+        O3_annually
+        WHERE
+        [@ObjectiveName] = 'Capture Rate (%)'
+        
+                                                                                    """),
+                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
+
+fig6.update_layout(title={'text': 'Line plot showing annual capture rate of O3 by sensors in Tower Hamlets','xanchor': 'left',
+        'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Year',
+                            yaxis_title='Capture Rate (%)'
+                            ,
+                            #legend=dict(orientation="h",
+                            # #          entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
+
+fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+#print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
+
+fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+fig6.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+fig6.add_hline(y=10,line_dash='dot')
+
+fig6.show()
 
 # %%
