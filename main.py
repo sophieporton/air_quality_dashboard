@@ -134,43 +134,50 @@ if pollutant =='NO2':
      
      tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value", "Capture Rate"])
      with tab1:
-        #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
-     
+        col1,col2=st.columns(2)
+        with col1:
 
-        fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
+            #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
+        
 
-        fig.update_layout(title={
-        'text': 'Line plot showing hourly NO2 measurements from active sensors in Tower Hamlets','xanchor': 'left',
-        'yanchor': 'top','x':0.05,'y':0.98},
-                        xaxis_title='Measurement Date',
-                        yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
-                        #legend=dict(orientation="h", entrywidth=250,
-                        #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                        legend_title_text= '', font=dict(size= 17)
-                        )
+            fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
-        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+            fig.update_layout(title={
+            'text': 'Line plot showing hourly NO2 measurements from active sensors in Tower Hamlets','xanchor': 'left',
+            'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Measurement Date',
+                            yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
 
-        #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+            fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
-        fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
 
-        fig.update_layout(hoverlabel = dict(
-            font_size = 16))
+            fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
-        fig.add_hline(y=40,line_dash='dot')
+            fig.update_layout(hoverlabel = dict(
+                font_size = 16))
 
-        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+            fig.add_hline(y=40,line_dash='dot')
 
-        fig.show()
+            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
-        st.plotly_chart(fig, theme=None)    
+            fig.show()
 
-        #if last_row > 40:
-         #   st.write('Mile End Road sensor is currently over target limit')
-        #elif last_row < 40:
-        #    st.write('Mile End Road is currently within target')
+            st.plotly_chart(fig, theme=None)    
+
+            #if last_row > 40:
+            #   st.write('Mile End Road sensor is currently over target limit')
+            #elif last_row < 40:
+            #    st.write('Mile End Road is currently within target')
+        with col2:
+            st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
+     Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. 
+     NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions, and cause changes to the environment such as soil chemistry.''')
 
 
 
