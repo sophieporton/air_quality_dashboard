@@ -125,6 +125,7 @@ st.sidebar.image(image, use_column_width=True)
 st.sidebar.header("Filter Your Data")
 
 pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
+
 #site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
 
 
@@ -140,9 +141,6 @@ if pollutant =='NO2':
      
      tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value", "Capture Rate"])
      with tab1:
-
-            #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
-        
 
             fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM NO2_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
@@ -183,7 +181,7 @@ if pollutant =='NO2':
 
 
      with tab2:
-        #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
+        
         fig2=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
@@ -213,8 +211,6 @@ if pollutant =='NO2':
                 font_size = 16))
 
         fig2.add_hline(y=40,line_dash='dot')
-
-            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
         fig2.show()
 
@@ -260,8 +256,6 @@ if pollutant =='NO2':
 
         fig3.add_hline(y=18,line_dash='dot')
 
-        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
-
         fig3.show()
 
         st.plotly_chart(fig3,theme=None)
@@ -301,8 +295,6 @@ if pollutant =='NO2':
 
         fig4.update_layout(hoverlabel = dict(
                 font_size = 16))
-
-        #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
         fig4.show()
 
