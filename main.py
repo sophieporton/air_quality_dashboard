@@ -41,6 +41,11 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
     not_null={"@Year", "@Value", "@SiteName"},
     column_order=("@Year", "@Value", "@SiteName"))
 
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='O3_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
+    not_null={"@Year", "@Value", "@SiteName"},
+    column_order=("@Year", "@Value", "@SiteName"))
+
+
 db = sqlite_utils.Database("air-sensors.db")
 
 #%%
@@ -51,11 +56,10 @@ req = requests.get("https://api.erg.ic.ac.uk/AirQuality/Information/MonitoringSi
 js = req.json() #json is like a python dictionary 
 sites = js['Sites']['Site'] #turns dictionary into list 
 
-# %%
-conn=create_connection('air-sensors.db')
-functions.delete_all_no2hourly(conn)
 
 #%%
+conn=create_connection('air-sensors.db')
+functions.delete_all_no2hourly(conn)
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
@@ -96,28 +100,32 @@ elif last_row < 40:
 
 
 
-# %%
-#years=list(range(1994,2024))
 
-#for year in years:    
-#   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
-#   print(url)
-#   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-#   print(req)
-#   j = req.json()
-#   l=j['SiteObjectives']['Site']
-#   rows=[]
-#   for data in l:
-#        data_row=data['Objective']
-#        n=data['@SiteName']
-#
-#        for row in data_row:
-#            row['@SiteName']= n
-#            rows.append(row)
-#    
-#   filtered = [a for a in rows if a['@SpeciesCode']=='NO2']
-#   db['NO2_annually'].upsert_all(filtered,pk=('@Year', '@SiteName', '@ObjectiveName'))
+#%%
+years=list(range(1994,2024))
 
+for year in years:    
+   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
+   print(url)
+   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+   print(req)
+   j = req.json()
+   l=j['SiteObjectives']['Site']
+   rows=[]
+   for data in l:
+        data_row=data['Objective']
+        n=data['@SiteName']
+
+        for row in data_row:
+            row['@SiteName']= n
+            rows.append(row)
+    
+   filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
+   db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
+   
+   filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
+   db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
+ 
 
 #%%
 image = functions.get_image("logo.png") # path of the file
