@@ -219,6 +219,14 @@ if pollutant =='NO2':
         fig2.show()
 
         st.plotly_chart(fig2,theme=None)
+
+        st.write('''Mean annual NO2 measurements have shown a general decline at all sites since monitoring began in 1994. 
+        The COVID-19 pandemic lead to a sharper decline in NO2 concentraation due to reduced traffic, and concentrations at
+        Mile End Road and Blackwall have not yet increased to pre-COVID levels. This means NO2 concentrations have mostly remained 
+        below the 40µgm3 target limit since 2020. 
+        ''')
+
+
      with tab3:
         fig3=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
@@ -256,6 +264,11 @@ if pollutant =='NO2':
 
         fig3.show()
 
+        st.write('''Instances of exceeding the hourly mean limit value (concentrations above 200 µg/m3) have decreased since 
+        monitoring began in 1994. There have been no recorded instances of exceeding the hourly mean limit value since 2020, 
+        and since 2007 no sites in Tower Hamlets have exceeded the target of 18 times per year. 
+        ''')
+
         st.plotly_chart(fig3,theme=None)
      with tab4:
         fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
@@ -264,8 +277,6 @@ if pollutant =='NO2':
         NO2_annually
         WHERE
         [@ObjectiveName] = 'Capture Rate (%)'
-        AND
-        [@Year]<2023
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
@@ -294,6 +305,10 @@ if pollutant =='NO2':
         fig4.show()
 
         st.plotly_chart(fig4,theme=None)
+
+        st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2017 the only sites
+        in Tower Hamlets to haave sensors collecting readings are Mile End Road, Blackwall and Jubilee Park. 
+        ''')
 
 if pollutant =='Ozone':
     st.write('to be continued...')
