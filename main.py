@@ -134,8 +134,6 @@ if pollutant =='NO2':
      
      tab1, tab2, tab3, tab4 = st.tabs(["Hourly", "Annually","Hourly Mean Limit Value", "Capture Rate"])
      with tab1:
-        col1,col2=st.columns(2)
-        with col1:
 
             #st.write('''Live data displaying hourly NO2 measurements in the past 2 weeks for the currently active sensors in Tower Hamlets.''')
         
@@ -174,7 +172,7 @@ if pollutant =='NO2':
             #   st.write('Mile End Road sensor is currently over target limit')
             #elif last_row < 40:
             #    st.write('Mile End Road is currently within target')
-        with col2:
+            
             st.write('''Nitrogen dioxide (NO2) is a gas that is mainly produced during the combustion of fossil fuels, along with nitric oxide (NO).
      Short-term exposure to concentrations of NO2 can cause inflammation of the airways and increase susceptibility to respiratory infections and to allergens. 
      NO2 can also exacerbate the symptoms of those already suffering from lung or heart conditions, and cause changes to the environment such as soil chemistry.''')
