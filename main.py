@@ -167,10 +167,10 @@ if pollutant =='NO2':
 
         st.plotly_chart(fig, theme=None)    
 
-        if last_row > 40:
-            st.write('Mile End Road sensor is currently over target limit')
-        elif last_row < 40:
-            st.write('Mile End Road is currently within target')
+        #if last_row > 40:
+         #   st.write('Mile End Road sensor is currently over target limit')
+        #elif last_row < 40:
+        #    st.write('Mile End Road is currently within target')
 
 
 
