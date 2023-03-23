@@ -380,7 +380,7 @@ if pollutant =='Ozone':
             fig.update_layout(hoverlabel = dict(
                 font_size = 16))
 
-            fig.add_hline(y=40,line_dash='dot')
+            #fig.add_hline(y=40,line_dash='dot')
 
             #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
@@ -417,7 +417,9 @@ if pollutant =='Ozone':
         fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
         fig5.update_layout(hoverlabel = dict(
                         font_size = 16))
-
+        
+        fig5.add_hline(y=10,line_dash='dot')
+        
         fig5.show()
 
         st.plotly_chart(fig5,theme=None)
