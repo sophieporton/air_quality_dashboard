@@ -93,9 +93,10 @@ while StartWeekDate > StartDate :
 
 #%%
 
+
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
-StartWeekDate = EndDate - timedelta(weeks = 10)
+StartWeekDate = EndDate - timedelta(weeks = 6)
 StartDate = StartWeekDate - timedelta(days = 1)
 
 while StartWeekDate > StartDate :
@@ -116,7 +117,7 @@ while StartWeekDate > StartDate :
                 filteredList = list(filtered)
                 db['O3_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
         EndWeekDate = StartWeekDate
-        StartWeekDate = EndWeekDate - timedelta(weeks = 210)
+        StartWeekDate = EndWeekDate - timedelta(weeks = 6)
 
 
 #%%
