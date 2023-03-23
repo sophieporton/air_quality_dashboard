@@ -95,7 +95,7 @@ while StartWeekDate > StartDate :
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
-StartWeekDate = EndDate - timedelta(weeks = 2)
+StartWeekDate = EndDate - timedelta(weeks = 10)
 StartDate = StartWeekDate - timedelta(days = 1)
 
 while StartWeekDate > StartDate :
@@ -116,7 +116,7 @@ while StartWeekDate > StartDate :
                 filteredList = list(filtered)
                 db['O3_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
         EndWeekDate = StartWeekDate
-        StartWeekDate = EndWeekDate - timedelta(weeks = 2)
+        StartWeekDate = EndWeekDate - timedelta(weeks = 210)
 
 
 #%%
@@ -356,6 +356,36 @@ if pollutant =='Ozone':
      ''')
      
      tab1, tab2, tab3= st.tabs(["Hourly","8 Hour Mean Limit Value", "Capture Rate"])
+     with tab1:
+            fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM O3_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
+
+            fig.update_layout(title={
+            'text': 'Line plot showing hourly NO2 measurements from active sensors in Tower Hamlets','xanchor': 'left',
+            'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Measurement Date',
+                            yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
+
+            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+            fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+
+            fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+            fig.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+            fig.add_hline(y=40,line_dash='dot')
+
+            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+            fig.show()
+
+            st.plotly_chart(fig, theme=None)    
      with tab2:
 
 
