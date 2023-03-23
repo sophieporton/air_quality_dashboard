@@ -420,8 +420,6 @@ if pollutant =='Ozone':
         fig6.update_layout(hoverlabel = dict(
                         font_size = 16))
 
-        fig6.add_hline(y=10,line_dash='dot')
-
         fig6.show()
 
         st.plotly_chart(fig6,theme=None)
