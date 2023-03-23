@@ -342,7 +342,7 @@ if pollutant =='NO2':
         st.plotly_chart(fig4,theme=None)
 
         st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2017 the only sites
-        in Tower Hamlets to haave sensors collecting readings are Mile End Road, Blackwall and Jubilee Park. 
+        in Tower Hamlets to have sensors collecting readings are Mile End Road, Blackwall and Jubilee Park. 
         ''')
 
 if pollutant =='Ozone':
@@ -387,6 +387,11 @@ if pollutant =='Ozone':
             fig.show()
 
             st.plotly_chart(fig, theme=None)    
+
+            st.write(''' There are currently no active O3 sensors in Tower Hamlets with the most recent measurement of O3 being on 24/2 
+                            at Blackwall
+        ''')
+
      with tab2:
 
 
@@ -419,10 +424,14 @@ if pollutant =='Ozone':
                         font_size = 16))
         
         fig5.add_hline(y=10,line_dash='dot')
-        
+
         fig5.show()
 
         st.plotly_chart(fig5,theme=None)
+
+        st.write(''' The O3 sensor at Poplar consistently exceeded the 8-hour mean limit value 10 times annually during its operation 
+        between 1994-2013. In contrast, the O3 concentration at Blackwall has successfully stayed below this target between 2006-2023.
+        ''')
 
      with tab3:
 
@@ -461,3 +470,7 @@ if pollutant =='Ozone':
         fig6.show()
 
         st.plotly_chart(fig6,theme=None)
+
+        st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2016 the only site
+        in Tower Hamlets to be collecting O3 concentration readings is Blackwall.
+        ''')
