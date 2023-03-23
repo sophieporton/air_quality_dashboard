@@ -364,7 +364,7 @@ if pollutant =='Ozone':
                                                                                             """),
                                 x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig5.update_layout(title={'text': 'Line plot showing annual mean O3 measurements in Tower Hamlets','xanchor': 'left',
+        fig5.update_layout(title={'text': 'Line plot showing the number of times the 8 hour mean limit value was exceeded annually','xanchor': 'left',
                 'yanchor': 'top','x':0.05,'y':0.98},
                                     xaxis_title='Year',
                                     yaxis_title='Count'
@@ -381,8 +381,6 @@ if pollutant =='Ozone':
         fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
         fig5.update_layout(hoverlabel = dict(
                         font_size = 16))
-
-        fig5.add_hline(y=10,line_dash='dot')
 
         fig5.show()
 
