@@ -346,9 +346,14 @@ if pollutant =='NO2':
 
 if pollutant =='Ozone':
      st.subheader('Ozone (O3)')
-     st.write('''''')
+     st.write('''Ozone (O3) is a gas which is damaging to human health and can trigger inflammation of the 
+     respiratory tract, eyes, nose and throat as well as asthma attacks. In addition, 
+     ozone can have adverse effects on the environment through oxidative damage to vegetation including crops. 
+     ''')
      
-     st.write('''''')
+     st.write('''The Air Quality Standards Regulations 2010 set the target that the 8-hour mean 
+     concentrations of O3 should not exceed 100 µg/m3 more than 10 times per year.
+     ''')
      
      tab1, tab2, tab3= st.tabs(["Hourly","8 Hour Mean Limit Value", "Capture Rate"])
      with tab2:
