@@ -345,79 +345,85 @@ if pollutant =='NO2':
         ''')
 
 if pollutant =='Ozone':
-    st.write('to be continued...')
+     st.subheader('Ozone (O3)')
+     st.write('''''')
+     
+     st.write('''''')
+     
+     tab1, tab2, tab3= st.tabs(["Hourly","8 Hour Mean Limit Value", "Capture Rate"])
+     with tab2:
 
 
-# %%
+        fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+                *
+                FROM
+                O3_annually
+                WHERE
+                [@ObjectiveName] = '100 ug/m3 as an 8 hour mean, not to be exceeded more than 10 times a year'
+                
+                                                                                            """),
+                                x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
-        *
-        FROM
-        O3_annually
-        WHERE
-        [@ObjectiveName] = '100 ug/m3 as an 8 hour mean, not to be exceeded more than 10 times a year'
-        
-                                                                                    """),
-                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
+        fig5.update_layout(title={'text': 'Line plot showing annual mean O3 measurements in Tower Hamlets','xanchor': 'left',
+                'yanchor': 'top','x':0.05,'y':0.98},
+                                    xaxis_title='Year',
+                                    yaxis_title='Count'
+                                    ,
+                                    #legend=dict(orientation="h",
+                                    # #          entrywidth=250,
+                                    #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                                    legend_title_text= '', font=dict(size= 17)
+                                    )
 
-fig5.update_layout(title={'text': 'Line plot showing annual mean O3 measurements in Tower Hamlets','xanchor': 'left',
-        'yanchor': 'top','x':0.05,'y':0.98},
-                            xaxis_title='Year',
-                            yaxis_title='Count'
-                            ,
-                            #legend=dict(orientation="h",
-                            # #          entrywidth=250,
-                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 17)
-                            )
+        fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
+        fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig5.update_layout(hoverlabel = dict(
+                        font_size = 16))
 
-fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
-#print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
-fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-fig5.update_layout(hoverlabel = dict(
-                font_size = 16))
+        fig5.add_hline(y=10,line_dash='dot')
 
-fig5.add_hline(y=10,line_dash='dot')
+        fig5.show()
 
-fig5.show()
+        st.plotly_chart(fig5,theme=None)
 
-#
-# %%
+     with tab3:
 
 
-fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
-        *
-        FROM
-        O3_annually
-        WHERE
-        [@ObjectiveName] = 'Capture Rate (%)'
-        
-                                                                                    """),
-                        x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-fig6.update_layout(title={'text': 'Line plot showing annual capture rate of O3 by sensors in Tower Hamlets','xanchor': 'left',
-        'yanchor': 'top','x':0.05,'y':0.98},
-                            xaxis_title='Year',
-                            yaxis_title='Capture Rate (%)'
-                            ,
-                            #legend=dict(orientation="h",
-                            # #          entrywidth=250,
-                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 17)
-                            )
+        fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+                *
+                FROM
+                O3_annually
+                WHERE
+                [@ObjectiveName] = 'Capture Rate (%)'
+                
+                                                                                            """),
+                                x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig6.update_layout(title={'text': 'Line plot showing annual capture rate of O3 by sensors in Tower Hamlets','xanchor': 'left',
+                'yanchor': 'top','x':0.05,'y':0.98},
+                                    xaxis_title='Year',
+                                    yaxis_title='Capture Rate (%)'
+                                    ,
+                                    #legend=dict(orientation="h",
+                                    # #          entrywidth=250,
+                                    #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                                    legend_title_text= '', font=dict(size= 17)
+                                    )
 
-#print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
+        fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
-fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-fig6.update_layout(hoverlabel = dict(
-                font_size = 16))
+        #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
 
-fig6.add_hline(y=10,line_dash='dot')
+        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig6.update_layout(hoverlabel = dict(
+                        font_size = 16))
 
-fig6.show()
+        fig6.add_hline(y=10,line_dash='dot')
 
-# %%
+        fig6.show()
+
+        st.plotly_chart(fig6,theme=None)
