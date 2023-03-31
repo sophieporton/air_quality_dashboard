@@ -555,3 +555,95 @@ if pollutant =='Ozone':
         st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2016 the only site
         in Tower Hamlets to be collecting O3 concentration readings is Blackwall.
         ''')
+
+
+#%%
+
+
+if pollutant =='PM2.5':
+     st.subheader('Particulate Matter (PM2.5)')
+     st.write('''Particulate matter (PM) is everything in the air that is not a gas and therefore consists of a huge variety of chemical compounds and materials,
+       some of which can be toxic. Due to the small size of many of the particles that form PM some of these toxins may enter the bloodstream and be transported around the body, 
+       lodging in the heart, brain and other organs. Therefore, exposure to PM can result in serious impacts to health, especially in vulnerable groups of 
+       people such as the young, elderly, and those with respiratory problems.
+     ''')
+     
+     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM2.5 in the UK must not exceed
+     an annual average of 25 µg/m3
+     ''')
+     
+     tab1, tab2= st.tabs(["Annual mean", "Capture Rate"])
+     with tab1:
+            fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM PM25_annually; """), x= 'Year', y= '@Value', color='@SiteName',width=1200, height= 700)
+
+            fig.update_layout(title={
+            'text': 'Bar plot showing annual average PM2.5 concentration from active sensors in Tower Hamlets','xanchor': 'left',
+            'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Year',
+                            yaxis_title='PM2.5 Concentration (µg/m<sup>3</sup>)',
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
+
+            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+            fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+
+            fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+            fig.update_layout(hoverlabel = dict(
+                font_size = 16))
+
+            fig.add_hline(y=25,line_dash='dot')
+
+            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+            fig.show()
+
+            st.plotly_chart(fig, theme=None)    
+
+            st.write(''' 
+        ''')
+
+     with tab2:
+
+
+        fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+                *
+                FROM
+                O3_annually
+                WHERE
+                [@ObjectiveName] = '100 ug/m3 as an 8 hour mean, not to be exceeded more than 10 times a year'
+                
+                                                                                            """),
+                                x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
+
+        fig5.update_layout(title={'text': 'Line plot showing the number of times the 8 hour mean limit value was exceeded annually','xanchor': 'left',
+                'yanchor': 'top','x':0.05,'y':0.98},
+                                    xaxis_title='Year',
+                                    yaxis_title='Count'
+                                    ,
+                                    #legend=dict(orientation="h",
+                                    # #          entrywidth=250,
+                                    #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                                    legend_title_text= '', font=dict(size= 17)
+                                    )
+
+        fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
+        fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig5.update_layout(hoverlabel = dict(
+                        font_size = 16))
+        
+        fig5.add_hline(y=10,line_dash='dot')
+
+        fig5.show()
+
+        st.plotly_chart(fig5,theme=None)
+
+        st.write(''' The O3 sensor at Poplar consistently exceeded the 8-hour mean limit value 10 times annually during its operation 
+        between 1994-2013. In contrast, the O3 concentration at Blackwall has successfully stayed below this target between 2006-2023.
+        ''')
