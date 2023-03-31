@@ -650,6 +650,12 @@ if pollutant =='PM2.5':
         fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
         fig6.update_layout(hoverlabel = dict(
                         font_size = 16))
+        
+        fig6.update_layout(xaxis = dict(
+            tickmode = 'linear',
+            tick0 = 2022,
+             dtick = 1
+               ))
 
         fig6.show()
 
