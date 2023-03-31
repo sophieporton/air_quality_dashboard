@@ -584,7 +584,7 @@ if pollutant =='PM2.5':
             'text': 'Bar plot showing annual average PM2.5 concentration from active sensors in Tower Hamlets','xanchor': 'left',
             'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
-                            yaxis_title='PM2.5 Concentration (µg/m<sup>3</sup>)',
+                            yaxis_title='Annual Mean PM2.5 Concentration (µg/m<sup>3</sup>)',
                             #legend=dict(orientation="h", entrywidth=250,
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
                             legend_title_text= '', font=dict(size= 17)
@@ -617,5 +617,69 @@ if pollutant =='PM2.5':
      st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
             began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
             So far in 2023 the PM2.5 concentration at Jubilee park is within the target value.
+        ''')
+            
+
+#%%
+
+
+
+if pollutant =='PM10':
+     st.subheader('Particulate Matter (PM10)')
+     st.write('''Particulate matter (PM) is everything in the air that is not a gas and therefore consists of a huge variety of chemical compounds and materials,
+       some of which can be toxic. Due to the small size of many of the particles that form PM some of these toxins may enter the bloodstream and be transported around the body, 
+       lodging in the heart, brain and other organs. Therefore, exposure to PM can result in serious impacts to health, especially in vulnerable groups of 
+       people such as the young, elderly, and those with respiratory problems.
+     ''')
+     
+     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM2.5 in the UK must not exceed
+     an annual average of 40 µg/m3
+     ''')
+     
+     fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
+           """SELECT * 
+               FROM PM10_annually
+              WHERE
+                [@ObjectiveName] = '40 ug/m3 as an annual mean'; """),
+                 
+                  x= '@Year', y= '@Value', color='@SiteName',width=1200, height= 700)
+
+     fig.update_layout(title={
+            'text': 'Bar plot showing annual average PM10 concentration from active sensors in Tower Hamlets','xanchor': 'left',
+            'yanchor': 'top','x':0.05,'y':0.98},
+                            xaxis_title='Year',
+                            yaxis_title='Annual Mean PM10 Concentration (µg/m<sup>3</sup>)',
+                            #legend=dict(orientation="h", entrywidth=250,
+                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
+                            legend_title_text= '', font=dict(size= 17)
+                            )
+
+     fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
+     fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
+            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+
+     fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+
+     fig.update_layout(hoverlabel = dict(
+                font_size = 16))
+            
+     fig.update_layout(xaxis = dict(
+            tickmode = 'linear',
+            tick0 = 2022,
+             dtick = 1
+               ))
+
+     fig.add_hline(y=40,line_dash='dot')
+
+            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
+
+     fig.show()
+
+     st.plotly_chart(fig, theme=None)    
+
+     st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM10. Measurements
+            began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
+            So far in 2023 the PM10 concentration at Jubilee park is within the target value.
         ''')
             
