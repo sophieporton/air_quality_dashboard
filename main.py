@@ -140,60 +140,60 @@ while StartWeekDate > StartDate :
 
 #functions.delete_all_sql(conn, sql='DELETE FROM PM25_hourly')
 
-EndDate = date.today() + timedelta(days = 1)
-EndWeekDate = EndDate
-StartWeekDate = EndDate - timedelta(weeks = 20)
-StartDate = StartWeekDate - timedelta(days = 1)
+#EndDate = date.today() + timedelta(days = 1)
+#EndWeekDate = EndDate
+#StartWeekDate = EndDate - timedelta(weeks = 20)
+#StartDate = StartWeekDate - timedelta(days = 1)
 
-while StartWeekDate > StartDate :
-        for el in sites:
-            def convert(list):
-                list['@Value'] = float(list['@Value'])
-                list['@Site'] = el['@SiteName']
-                return list
-            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM25/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
-            print(url)
-            req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-            print(req)
-            j = req.json()
-            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
-            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
-            if len(filtered) != 0:
-                filtered = map(convert, filtered)
-                filteredList = list(filtered)
-                db['PM25_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
-        EndWeekDate = StartWeekDate
-        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
+#while StartWeekDate > StartDate :
+ #       for el in sites:
+ #           def convert(list):
+#              list['@Value'] = float(list['@Value'])
+#                list['@Site'] = el['@SiteName']
+ #               return list
+  #          url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM25/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
+   #         print(url)
+    #        req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+     #       print(req)
+      #      j = req.json()
+       #     # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
+#            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
+ #           if len(filtered) != 0:
+  #              filtered = map(convert, filtered)
+   #             filteredList = list(filtered)
+    #            db['PM25_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
+     #   EndWeekDate = StartWeekDate
+      #  StartWeekDate = EndWeekDate - timedelta(weeks = 20)
 
 #%%
 
 #conn=create_connection('air-sensors.db')
 #functions.delete_all_sql(conn, sql='DELETE FROM PM10_hourly')
 
-EndDate = date.today() + timedelta(days = 1)
-EndWeekDate = EndDate
-StartWeekDate = EndDate - timedelta(weeks = 20)
-StartDate = StartWeekDate - timedelta(days = 1)
+#EndDate = date.today() + timedelta(days = 1)
+#EndWeekDate = EndDate
+#StartWeekDate = EndDate - timedelta(weeks = 20)
+#StartDate = StartWeekDate - timedelta(days = 1)
 
-while StartWeekDate > StartDate :
-        for el in sites:
-            def convert(list):
-                list['@Value'] = float(list['@Value'])
-                list['@Site'] = el['@SiteName']
-                return list
-            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM10/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
-            print(url)
-            req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-            print(req)
-            j = req.json()
-            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
-            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
-            if len(filtered) != 0:
-                filtered = map(convert, filtered)
-                filteredList = list(filtered)
-                db['PM10_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
-        EndWeekDate = StartWeekDate
-        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
+#while StartWeekDate > StartDate :
+#        for el in sites:
+#            def convert(list):
+#                list['@Value'] = float(list['@Value'])
+#                list['@Site'] = el['@SiteName']
+#                return list
+#            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM10/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
+#            print(url)
+ #           req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+  #          print(req)
+#            j = req.json()
+#            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
+ #           filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
+ #           if len(filtered) != 0:
+ #               filtered = map(convert, filtered)
+ #               filteredList = list(filtered)
+ #               db['PM10_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
+ #       EndWeekDate = StartWeekDate
+#        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
 
 #%%
 
