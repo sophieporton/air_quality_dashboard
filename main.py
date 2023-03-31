@@ -616,5 +616,6 @@ if pollutant =='PM2.5':
 
      st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
             began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
+            So far in 2023 the PM2.5 concentration at Jubilee park is within the target value.
         ''')
             
