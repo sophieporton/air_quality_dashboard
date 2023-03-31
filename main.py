@@ -632,7 +632,7 @@ if pollutant =='PM10':
        people such as the young, elderly, and those with respiratory problems.
      ''')
      
-     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM2.5 in the UK must not exceed
+     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM10 in the UK must not exceed
      an annual average of 40 µg/m3
      ''')
      
