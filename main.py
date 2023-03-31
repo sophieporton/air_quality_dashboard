@@ -601,6 +601,12 @@ if pollutant =='PM2.5':
 
             fig.update_layout(hoverlabel = dict(
                 font_size = 16))
+            
+            fig.update_layout(xaxis = dict(
+            tickmode = 'linear',
+            tick0 = 2022,
+             dtick = 1
+               ))
 
             fig.add_hline(y=25,line_dash='dot')
 
