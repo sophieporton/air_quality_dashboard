@@ -647,7 +647,7 @@ if pollutant =='PM2.5':
 
         #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
 
-        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Capture Rate (%) = </b>%{y}<extra></extra>')
         fig6.update_layout(hoverlabel = dict(
                         font_size = 16))
         
