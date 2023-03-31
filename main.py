@@ -648,12 +648,13 @@ if pollutant =='PM2.5':
         #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
 
         fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Capture Rate (%) = </b>%{y}<extra></extra>')
+       
         fig6.update_layout(hoverlabel = dict(
                         font_size = 16))
         
         fig6.update_layout(xaxis = dict(
             tickmode = 'linear',
-            tick0 = 2022,
+            tick0 = 2021,
              dtick = 1
                ))
 
