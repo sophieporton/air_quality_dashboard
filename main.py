@@ -572,9 +572,7 @@ if pollutant =='PM2.5':
      an annual average of 25 µg/m3
      ''')
      
-     tab1= st.tabs(["Annual mean"])
-     with tab1:
-            fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
+     fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
            """SELECT * 
                FROM PM25_annually
               WHERE
@@ -582,7 +580,7 @@ if pollutant =='PM2.5':
                  
                   x= '@Year', y= '@Value', color='@SiteName',width=1200, height= 700)
 
-            fig.update_layout(title={
+     fig.update_layout(title={
             'text': 'Bar plot showing annual average PM2.5 concentration from active sensors in Tower Hamlets','xanchor': 'left',
             'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
@@ -592,31 +590,31 @@ if pollutant =='PM2.5':
                             legend_title_text= '', font=dict(size= 17)
                             )
 
-            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
-            fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+     fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
+     fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
             #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
 
-            fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+     fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
-            fig.update_layout(hoverlabel = dict(
+     fig.update_layout(hoverlabel = dict(
                 font_size = 16))
             
-            fig.update_layout(xaxis = dict(
+     fig.update_layout(xaxis = dict(
             tickmode = 'linear',
             tick0 = 2022,
              dtick = 1
                ))
 
-            fig.add_hline(y=25,line_dash='dot')
+     fig.add_hline(y=25,line_dash='dot')
 
             #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
 
-            fig.show()
+     fig.show()
 
-            st.plotly_chart(fig, theme=None)    
+     st.plotly_chart(fig, theme=None)    
 
-            st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
+     st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
             began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
         ''')
             
