@@ -361,10 +361,10 @@ if pollutant =='Ozone':
             fig = px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM O3_hourly; """), x= '@MeasurementDateGMT', y= '@Value', color='@Site',width=1200, height= 700)
 
             fig.update_layout(title={
-            'text': 'Line plot showing hourly NO2 measurements from active sensors in Tower Hamlets','xanchor': 'left',
+            'text': 'Line plot showing hourly O3 measurements from active sensors in Tower Hamlets','xanchor': 'left',
             'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Measurement Date',
-                            yaxis_title='NO<sub>2</sub> Concentration (µg/m<sup>3</sup>)',
+                            yaxis_title='O<sub>3</sub> Concentration (µg/m<sup>3</sup>)',
                             #legend=dict(orientation="h", entrywidth=250,
                             #yanchor="bottom", y=1.02, xanchor="right", x=1),
                             legend_title_text= '', font=dict(size= 17)
