@@ -574,7 +574,7 @@ if pollutant =='PM2.5':
      
      tab1, tab2= st.tabs(["Annual mean", "Capture Rate"])
      with tab1:
-            fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM PM25_annually; """), x= 'Year', y= '@Value', color='@SiteName',width=1200, height= 700)
+            fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command="""SELECT * FROM PM25_annually; """), x= '@Year', y= '@Value', color='@SiteName',width=1200, height= 700)
 
             fig.update_layout(title={
             'text': 'Bar plot showing annual average PM2.5 concentration from active sensors in Tower Hamlets','xanchor': 'left',
