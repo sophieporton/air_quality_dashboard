@@ -586,7 +586,7 @@ if pollutant =='PM2.5':
                             legend_title_text= '', font=dict(size= 17)
                             )
 
-            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+            fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
             fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
             #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
