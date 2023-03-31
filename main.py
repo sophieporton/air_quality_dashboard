@@ -572,7 +572,7 @@ if pollutant =='PM2.5':
      an annual average of 25 µg/m3
      ''')
      
-     tab1, tab2= st.tabs(["Annual mean", "Capture Rate"])
+     tab1= st.tabs(["Annual mean"])
      with tab1:
             fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
            """SELECT * 
@@ -616,50 +616,7 @@ if pollutant =='PM2.5':
 
             st.plotly_chart(fig, theme=None)    
 
-            st.write(''' 
+            st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
+            began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
         ''')
             
-     with tab2:
-
-        fig6=px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
-                *
-                FROM
-                PM25_annually
-                WHERE
-                [@ObjectiveName] = 'Capture Rate (%)'
-                
-                                                                                            """),
-                                x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
-
-        fig6.update_layout(title={'text': 'Bar plot showing annual capture rate of PM2.5 by sensors in Tower Hamlets','xanchor': 'left',
-                'yanchor': 'top','x':0.05,'y':0.98},
-                                    xaxis_title='Year',
-                                    yaxis_title='Capture Rate (%)'
-                                    ,
-                                    #legend=dict(orientation="h",
-                                    # #          entrywidth=250,
-                                    #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                                    legend_title_text= '', font=dict(size= 17)
-                                    )
-
-        fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
-
-        #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
-
-        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Capture Rate (%) = </b>%{y}<extra></extra>')
-       
-        fig6.update_layout(hoverlabel = dict(
-                        font_size = 16))
-        
-        fig6.update_layout(xaxis = dict(
-            tickmode = 'linear',
-            tick0 = 2021,
-             dtick = 1
-               ))
-
-        fig6.show()
-
-        st.plotly_chart(fig6,theme=None)
-          
-
