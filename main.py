@@ -621,7 +621,7 @@ if pollutant =='PM2.5':
             
      with tab2:
 
-        fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig6=px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
                 *
                 FROM
                 PM25_annually
@@ -631,7 +631,7 @@ if pollutant =='PM2.5':
                                                                                             """),
                                 x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig6.update_layout(title={'text': 'Line plot showing annual capture rate of PM2.5 by sensors in Tower Hamlets','xanchor': 'left',
+        fig6.update_layout(title={'text': 'Bar plot showing annual capture rate of PM2.5 by sensors in Tower Hamlets','xanchor': 'left',
                 'yanchor': 'top','x':0.05,'y':0.98},
                                     xaxis_title='Year',
                                     yaxis_title='Capture Rate (%)'
