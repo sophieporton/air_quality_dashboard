@@ -31,13 +31,13 @@ def get_image(path:str)->Image:
     return image
 
 #%%
-def delete_all_no2hourly(conn):
+def delete_all_sql(conn, sql):
     """
     Delete all rows in the tasks table
     :param conn: Connection to the SQLite database
     :return:
     """
-    sql = 'DELETE FROM NO2_hourly'
+    sql = sql
     cur = conn.cursor()
     cur.execute(sql)
     conn.commit()

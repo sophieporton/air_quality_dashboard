@@ -49,6 +49,21 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
     column_order=("@MeasurementDateGMT", "@Value", "@Site"))
 
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM10_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
+    not_null={"@Year", "@Value", "@SiteName"},
+    column_order=("@Year", "@Value", "@SiteName"))
+
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM25_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
+    not_null={"@Year", "@Value", "@SiteName"},
+    column_order=("@Year", "@Value", "@SiteName"))
+
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM10_hourly',pk=('@MeasurementDateGMT', '@Site'),
+    not_null={"@MeasurementDateGMT", "@Value", "@Site"},
+    column_order=("@MeasurementDateGMT", "@Value", "@Site"))
+
+functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM25_hourly',pk=('@MeasurementDateGMT', '@Site'),
+    not_null={"@MeasurementDateGMT", "@Value", "@Site"},
+    column_order=("@MeasurementDateGMT", "@Value", "@Site"))
 
 db = sqlite_utils.Database("air-sensors.db")
 
@@ -63,7 +78,7 @@ sites = js['Sites']['Site'] #turns dictionary into list
 
 #%%
 conn=create_connection('air-sensors.db')
-functions.delete_all_no2hourly(conn)
+functions.delete_all_sql(conn, sql='DELETE FROM NO2_hourly')
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
@@ -93,6 +108,8 @@ while StartWeekDate > StartDate :
 
 #%%
 
+conn=create_connection('air-sensors.db')
+functions.delete_all_sql(conn, sql='DELETE FROM O3_hourly')
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
@@ -119,6 +136,64 @@ while StartWeekDate > StartDate :
         EndWeekDate = StartWeekDate
         StartWeekDate = EndWeekDate - timedelta(weeks = 6)
 
+#%%
+
+#functions.delete_all_sql(conn, sql='DELETE FROM PM25_hourly')
+
+EndDate = date.today() + timedelta(days = 1)
+EndWeekDate = EndDate
+StartWeekDate = EndDate - timedelta(weeks = 20)
+StartDate = StartWeekDate - timedelta(days = 1)
+
+while StartWeekDate > StartDate :
+        for el in sites:
+            def convert(list):
+                list['@Value'] = float(list['@Value'])
+                list['@Site'] = el['@SiteName']
+                return list
+            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM25/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
+            print(url)
+            req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+            print(req)
+            j = req.json()
+            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
+            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
+            if len(filtered) != 0:
+                filtered = map(convert, filtered)
+                filteredList = list(filtered)
+                db['PM25_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
+        EndWeekDate = StartWeekDate
+        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
+
+#%%
+
+#conn=create_connection('air-sensors.db')
+#functions.delete_all_sql(conn, sql='DELETE FROM PM10_hourly')
+
+EndDate = date.today() + timedelta(days = 1)
+EndWeekDate = EndDate
+StartWeekDate = EndDate - timedelta(weeks = 20)
+StartDate = StartWeekDate - timedelta(days = 1)
+
+while StartWeekDate > StartDate :
+        for el in sites:
+            def convert(list):
+                list['@Value'] = float(list['@Value'])
+                list['@Site'] = el['@SiteName']
+                return list
+            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM10/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
+            print(url)
+            req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
+            print(req)
+            j = req.json()
+            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
+            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
+            if len(filtered) != 0:
+                filtered = map(convert, filtered)
+                filteredList = list(filtered)
+                db['PM10_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
+        EndWeekDate = StartWeekDate
+        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
 
 #%%
 
@@ -139,7 +214,7 @@ elif last_row < 40:
 
 #for year in years:    
 #   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
- #  print(url)
+#   print(url)
 #   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
 #   print(req)
 #   j = req.json()
@@ -151,21 +226,27 @@ elif last_row < 40:
 #
 #        for row in data_row:
 #            row['@SiteName']= n
-#            rows.append(row)
-#    
-#   filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
-#   db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
-#   
-#   filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
-#   db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
+#           rows.append(row)
+    
+#filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
+#db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
+   
+#filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
+#db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
+ 
+#filtered_PM10 = [a for a in rows if a['@SpeciesCode']=='PM10']
+#db['PM10_annually'].upsert_all(filtered_PM10,pk=('@Year', '@SiteName', '@ObjectiveName'))
+ 
+#filtered_PM25 = [a for a in rows if a['@SpeciesCode']=='PM25']
+#db['PM25_annually'].upsert_all(filtered_PM25,pk=('@Year', '@SiteName', '@ObjectiveName'))
  
 
 #%%
 image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
-st.sidebar.header(":red[Filter your data]")
+st.sidebar.header(":black[Filter your data]")
 
-pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
+pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone', 'PM2.5','PM10'))
 
 #site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
 
