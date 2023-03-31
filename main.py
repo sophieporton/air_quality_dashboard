@@ -618,24 +618,23 @@ if pollutant =='PM2.5':
 
             st.write(''' 
         ''')
-
+            
      with tab2:
 
-
-        fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
                 *
                 FROM
-                O3_annually
+                PM25_annually
                 WHERE
-                [@ObjectiveName] = '100 ug/m3 as an 8 hour mean, not to be exceeded more than 10 times a year'
+                [@ObjectiveName] = 'Capture Rate (%)'
                 
                                                                                             """),
                                 x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig5.update_layout(title={'text': 'Line plot showing the number of times the 8 hour mean limit value was exceeded annually','xanchor': 'left',
+        fig6.update_layout(title={'text': 'Line plot showing annual capture rate of PM2.5 by sensors in Tower Hamlets','xanchor': 'left',
                 'yanchor': 'top','x':0.05,'y':0.98},
                                     xaxis_title='Year',
-                                    yaxis_title='Count'
+                                    yaxis_title='Capture Rate (%)'
                                     ,
                                     #legend=dict(orientation="h",
                                     # #          entrywidth=250,
@@ -643,19 +642,17 @@ if pollutant =='PM2.5':
                                     legend_title_text= '', font=dict(size= 17)
                                     )
 
-        fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+
         #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
-        fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-        fig5.update_layout(hoverlabel = dict(
+
+        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig6.update_layout(hoverlabel = dict(
                         font_size = 16))
-        
-        fig5.add_hline(y=10,line_dash='dot')
 
-        fig5.show()
+        fig6.show()
 
-        st.plotly_chart(fig5,theme=None)
+        st.plotly_chart(fig6,theme=None)
+          
 
-        st.write(''' The O3 sensor at Poplar consistently exceeded the 8-hour mean limit value 10 times annually during its operation 
-        between 1994-2013. In contrast, the O3 concentration at Blackwall has successfully stayed below this target between 2006-2023.
-        ''')
