@@ -1,3 +1,14 @@
+#%%
+#NOTES
+
+#PM25 and PM10 code to fill hourly tables is commented out as no hourly readings taking place when this dashboard was made- this may have
+#changed however so may be worth checking.
+
+#Code to get yearly measurements is commented out as this vastly improves performance and yearly data does not update often 
+
+
+
+
 # %%
 #import required packages
 
@@ -17,22 +28,10 @@ from streamlit_autorefresh import st_autorefresh
 from PIL import Image
 
 
-
-# %%
-#set up streamlit page 
-
-st.set_page_config(layout = "wide")
-st.title("Air quality dashboard")
-st.write('''This is a dashboard displaying air quality data in Tower Hamlets.
- This information has been obtained from the Environmental Research Group of Kings College
-London (http://www.erg.kcl.ac.uk), using data from the London Air Quality Network
-(http://www.londonair.org.uk). This information is licensed under the terms of the Open
-Government Licence. 
-  ''')
-
-st_autorefresh(interval=30*60*1000, key="api_update")
-
 #%%
+
+#Creating SQLIte database - adding empty tables
+
 functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='NO2_hourly',pk=('@MeasurementDateGMT', '@Site'),
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
     column_order=("@MeasurementDateGMT", "@Value", "@Site"))
@@ -65,7 +64,7 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
     column_order=("@MeasurementDateGMT", "@Value", "@Site"))
 
-db = sqlite_utils.Database("air-sensors.db")
+
 
 #%%
 
@@ -77,8 +76,12 @@ sites = js['Sites']['Site'] #turns dictionary into list
 
 
 #%%
+
+#creating NO2 hourly table
+
+db = sqlite_utils.Database("air-sensors.db")
 conn=create_connection('air-sensors.db')
-functions.delete_all_sql(conn, sql='DELETE FROM NO2_hourly')
+functions.delete_all_sql(conn, sql='DELETE FROM NO2_hourly') #ensures old data points previous to time period are removed 
 
 EndDate = date.today() + timedelta(days = 1)
 EndWeekDate = EndDate
@@ -107,6 +110,8 @@ while StartWeekDate > StartDate :
 
 
 #%%
+
+#creating O3 hourly table
 
 conn=create_connection('air-sensors.db')
 functions.delete_all_sql(conn, sql='DELETE FROM O3_hourly')
@@ -142,7 +147,7 @@ while StartWeekDate > StartDate :
 
 #EndDate = date.today() + timedelta(days = 1)
 #EndWeekDate = EndDate
-#StartWeekDate = EndDate - timedelta(weeks = 20)
+#StartWeekDate = EndDate - timedelta(weeks = 2)
 #StartDate = StartWeekDate - timedelta(days = 1)
 
 #while StartWeekDate > StartDate :
@@ -163,7 +168,7 @@ while StartWeekDate > StartDate :
    #             filteredList = list(filtered)
     #            db['PM25_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
      #   EndWeekDate = StartWeekDate
-      #  StartWeekDate = EndWeekDate - timedelta(weeks = 20)
+      #  StartWeekDate = EndWeekDate - timedelta(weeks = 2)
 
 #%%
 
@@ -172,7 +177,7 @@ while StartWeekDate > StartDate :
 
 #EndDate = date.today() + timedelta(days = 1)
 #EndWeekDate = EndDate
-#StartWeekDate = EndDate - timedelta(weeks = 20)
+#StartWeekDate = EndDate - timedelta(weeks = 2)
 #StartDate = StartWeekDate - timedelta(days = 1)
 
 #while StartWeekDate > StartDate :
@@ -193,18 +198,7 @@ while StartWeekDate > StartDate :
  #               filteredList = list(filtered)
  #               db['PM10_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
  #       EndWeekDate = StartWeekDate
-#        StartWeekDate = EndWeekDate - timedelta(weeks = 20)
-
-#%%
-
-cur = conn.cursor() 
-last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
-last_row=float(last_row[0])
-
-if last_row > 40:
-    target='above the target limit'
-elif last_row < 40:
-    target='within the target limit'
+#        StartWeekDate = EndWeekDate - timedelta(weeks = 2)
 
 
 
@@ -241,16 +235,29 @@ elif last_row < 40:
 #db['PM25_annually'].upsert_all(filtered_PM25,pk=('@Year', '@SiteName', '@ObjectiveName'))
  
 
-#%%
+# %%
+#set up streamlit page 
+
+st.set_page_config(layout = "wide")
+st.title("Air quality dashboard")
+st.write('''This is a dashboard displaying air quality data in Tower Hamlets.
+ This information has been obtained from the Environmental Research Group of Kings College
+London (http://www.erg.kcl.ac.uk), using data from the London Air Quality Network
+(http://www.londonair.org.uk). This information is licensed under the terms of the Open
+Government Licence. 
+  ''')
+
+st_autorefresh(interval=30*60*1000, key="api_update") #set to autorefresh every 30 mins
+
 image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
 st.sidebar.header(":black[Filter your data]")
 
 pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone', 'PM2.5','PM10'))
 
-#site= st.sidebar.multiselect('Choose a site', options= ('Mile End Road', 'Blackwall' ))
+#%%
 
-
+#Make NO2 page
 
 if pollutant =='NO2':
      st.subheader('Nitrogen dioxide (NO2)')
@@ -293,6 +300,17 @@ if pollutant =='NO2':
             fig.show()
 
             st.plotly_chart(fig, theme=None)    
+            
+    
+
+            cur = conn.cursor() 
+            last_row = cur.execute('select [@Value] from NO2_hourly').fetchall()[-1]
+            last_row=float(last_row[0])
+
+            if last_row > 40:
+                target='above the target limit'
+            elif last_row < 40:
+                target='within the target limit'
 
 
             st.write(f'''Hourly NO2 measurements fluctuate with local weather and traffic conditions but mainly stay
@@ -304,7 +322,7 @@ if pollutant =='NO2':
 
      with tab2:
         
-        fig2=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
         NO2_annually
@@ -313,7 +331,7 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig2.update_layout(title={
+        fig.update_layout(title={
         'text': 'Line plot showing annual mean NO2 measurements in Tower Hamlets','xanchor': 'left',
         'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
@@ -325,18 +343,18 @@ if pollutant =='NO2':
                             legend_title_text= '', font=dict(size= 17)
                             )
 
-        fig2.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig2.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
-        fig2.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-        fig2.update_layout(hoverlabel = dict(
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        print("plotly express hovertemplate:", fig.data[0].hovertemplate)
+        fig.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig.update_layout(hoverlabel = dict(
                 font_size = 16))
 
-        fig2.add_hline(y=40,line_dash='dot')
+        fig.add_hline(y=40,line_dash='dot')
 
-        fig2.show()
+        fig.show()
 
-        st.plotly_chart(fig2,theme=None)
+        st.plotly_chart(fig,theme=None)
 
         st.write('''Mean annual NO2 measurements have shown a general decline at all sites since monitoring began in 1994. 
         The COVID-19 pandemic lead to a sharper decline in NO2 concentraation due to reduced traffic, and concentrations at
@@ -346,7 +364,7 @@ if pollutant =='NO2':
 
 
      with tab3:
-        fig3=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
         NO2_annually
@@ -356,7 +374,7 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig3.update_layout(title={
+        fig.update_layout(title={
         'text': 'Line plot showing the number of times the hourly mean limit value was exceeded each year','xanchor': 'left',
         'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
@@ -366,21 +384,21 @@ if pollutant =='NO2':
                             legend_title_text= '', font=dict(size= 17)
                             )
 
-        fig3.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig3.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
-        print("plotly express hovertemplate:", fig3.data[0].hovertemplate)
+        print("plotly express hovertemplate:", fig.data[0].hovertemplate)
 
-        fig3.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+        fig.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
-        fig3.update_layout(hoverlabel = dict(
+        fig.update_layout(hoverlabel = dict(
                 font_size = 16),yaxis=dict(tickmode = 'linear', tick0 = 10,dtick = 10))
 
-        fig3.add_hline(y=18,line_dash='dot')
+        fig.add_hline(y=18,line_dash='dot')
 
-        fig3.show()
+        fig.show()
 
-        st.plotly_chart(fig3,theme=None)
+        st.plotly_chart(fig,theme=None)
 
         st.write('''Instances of exceeding the hourly mean limit value (concentrations above 200 µg/m3) have decreased since 
         monitoring began in 1994. There have been no recorded instances of exceeding the hourly mean limit value since 2020, 
@@ -389,7 +407,7 @@ if pollutant =='NO2':
 
         
      with tab4:
-        fig4=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
         *
         FROM
         NO2_annually
@@ -398,7 +416,7 @@ if pollutant =='NO2':
                                                                                     """),
                         x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig4.update_layout(title={
+        fig.update_layout(title={
         'text': 'Line plot showing annual capture rate of NO2 for the sensors in Tower Hamlets','xanchor': 'left',
         'yanchor': 'top','x':0.05,'y':0.98},
                             xaxis_title='Year',
@@ -408,23 +426,26 @@ if pollutant =='NO2':
                             legend_title_text= '', font=dict(size= 17)
                             )
         #fig4.layout.legend.tracegroupgap = 10
-        fig4.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig4.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
-        print("plotly express hovertemplate:", fig4.data[0].hovertemplate)
+        print("plotly express hovertemplate:", fig.data[0].hovertemplate)
 
-        fig4.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
+        fig.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
 
-        fig4.update_layout(hoverlabel = dict(
+        fig.update_layout(hoverlabel = dict(
                 font_size = 16))
 
-        fig4.show()
+        fig.show()
 
-        st.plotly_chart(fig4,theme=None)
+        st.plotly_chart(fig,theme=None)
 
         st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2017 the only sites
         in Tower Hamlets to have sensors collecting readings are Mile End Road, Blackwall and Jubilee Park. 
         ''')
+
+#%%
+#make ozone page
 
 if pollutant =='Ozone':
      st.subheader('Ozone (O3)')
@@ -476,7 +497,7 @@ if pollutant =='Ozone':
      with tab2:
 
 
-        fig5=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
                 *
                 FROM
                 O3_annually
@@ -486,7 +507,7 @@ if pollutant =='Ozone':
                                                                                             """),
                                 x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig5.update_layout(title={'text': 'Line plot showing the number of times the 8 hour mean limit value was exceeded annually','xanchor': 'left',
+        fig.update_layout(title={'text': 'Line plot showing the number of times the 8 hour mean limit value was exceeded annually','xanchor': 'left',
                 'yanchor': 'top','x':0.05,'y':0.98},
                                     xaxis_title='Year',
                                     yaxis_title='Count'
@@ -497,18 +518,18 @@ if pollutant =='Ozone':
                                     legend_title_text= '', font=dict(size= 17)
                                     )
 
-        fig5.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig5.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
         #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
-        fig5.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-        fig5.update_layout(hoverlabel = dict(
+        fig.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig.update_layout(hoverlabel = dict(
                         font_size = 16))
         
-        fig5.add_hline(y=10,line_dash='dot')
+        fig.add_hline(y=10,line_dash='dot')
 
-        fig5.show()
+        fig.show()
 
-        st.plotly_chart(fig5,theme=None)
+        st.plotly_chart(fig,theme=None)
 
         st.write(''' The O3 sensor at Poplar consistently exceeded the 8-hour mean limit value 10 times annually during its operation 
         between 1994-2013. In contrast, the O3 concentration at Blackwall has successfully stayed below this target between 2006-2023.
@@ -518,7 +539,7 @@ if pollutant =='Ozone':
 
 
 
-        fig6=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
+        fig=px.line(functions.sql_to_pandas(db='air-sensors.db', sql_command=""" SELECT
                 *
                 FROM
                 O3_annually
@@ -528,7 +549,7 @@ if pollutant =='Ozone':
                                                                                             """),
                                 x='@Year', y='@Value', color='@SiteName', width=1200, height=700)
 
-        fig6.update_layout(title={'text': 'Line plot showing annual capture rate of O3 by sensors in Tower Hamlets','xanchor': 'left',
+        fig.update_layout(title={'text': 'Line plot showing annual capture rate of O3 by sensors in Tower Hamlets','xanchor': 'left',
                 'yanchor': 'top','x':0.05,'y':0.98},
                                     xaxis_title='Year',
                                     yaxis_title='Capture Rate (%)'
@@ -539,18 +560,18 @@ if pollutant =='Ozone':
                                     legend_title_text= '', font=dict(size= 17)
                                     )
 
-        fig6.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
-        fig6.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18))
+        fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
 
         #print("plotly express hovertemplate:", fig2.data[0].hovertemplate)
 
-        fig6.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
-        fig6.update_layout(hoverlabel = dict(
+        fig.update_traces(hovertemplate='<b>Year </b>%{x}<br><b>Average value = </b>%{y}<extra></extra>')
+        fig.update_layout(hoverlabel = dict(
                         font_size = 16))
 
-        fig6.show()
+        fig.show()
 
-        st.plotly_chart(fig6,theme=None)
+        st.plotly_chart(fig,theme=None)
 
         st.write(''' The capture rate measures the percentage of the year that the sensor was taking readings. Since 2016 the only site
         in Tower Hamlets to be collecting O3 concentration readings is Blackwall.
@@ -559,6 +580,7 @@ if pollutant =='Ozone':
 
 #%%
 
+#make PM2.5 page
 
 if pollutant =='PM2.5':
      st.subheader('Particulate Matter (PM2.5)')
@@ -622,7 +644,7 @@ if pollutant =='PM2.5':
 
 #%%
 
-
+#make PM10 page
 
 if pollutant =='PM10':
      st.subheader('Particulate Matter (PM10)')
