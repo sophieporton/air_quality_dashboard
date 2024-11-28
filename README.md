@@ -4,7 +4,7 @@ Link to dashboard (https://st-augustine-air-quality-dashboard-v2-main-vvrhjv.str
 
  This project has allowed me to apply knowledge I have gained from the graduate program with ONS as well as learning about new data science relevant software features such as GitHub Actions and SQLite.  The key skills I have taken away are...
 
- - Creating and querying a SQLite database using the sqlite-utils3 package in Python, db querying was also supported by practising and formatting queries in Datasette
+ - Creating and querying a SQLite database using the SQLite-utils3 package in Python, db querying was also supported by practising and formatting queries in Datasette
  
 - Automation of the dashboard to display live air quality data using the auto-refresh feature in Streamlit, as well as GitHub Actions to run main.py python file every hour and commit new copy of db to repository
  
