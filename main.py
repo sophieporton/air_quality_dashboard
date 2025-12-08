@@ -201,29 +201,8 @@ The target is that 8-hour mean O₃ concentrations should not exceed 100 µg/m³
 more than 10 times per year.
 """)
 
-    tab1, tab2, tab3 = st.tabs(["Hourly", "8 Hour Mean Limit Value", "Capture Rate"])
+    tab2, tab3 = st.tabs(["8 Hour Mean Limit Value", "Capture Rate"])
 
-    # ------------------------- TAB 1 -------------------------
-    with tab1:
-        df = functions.sql_to_pandas('air-sensors.db', "SELECT * FROM O3_hourly;")
-
-        fig = px.line(
-            df, x='@MeasurementDateGMT', y='@Value', color='@Site',
-            width=1200, height=700
-        )
-        fig.update_layout(
-            title='Hourly O₃ measurements in Tower Hamlets',
-            xaxis_title='Measurement Date',
-            yaxis_title='O₃ Concentration (µg/m³)',
-            font=dict(size=17),
-            legend_title_text=''
-        )
-
-        st.plotly_chart(fig, theme=None)
-
-        st.write("""
-There are currently no active ozone sensors in Tower Hamlets.
-""")
 
     # ------------------------- TAB 2 -------------------------
     with tab2:
