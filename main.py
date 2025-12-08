@@ -1,13 +1,3 @@
-#%%
-#NOTES
-
-#PM25 and PM10 code to fill hourly tables is commented out as no hourly readings taking place when this dashboard was made- this may have
-#changed however so may be worth checking.
-
-#Code to get yearly measurements is commented out as this vastly improves performance and yearly data does not update often 
-
-
-
 
 # %%
 #import required packages
@@ -45,22 +35,6 @@ functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename=
     column_order=("@Year", "@Value", "@SiteName"))
 
 functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='O3_hourly',pk=('@MeasurementDateGMT', '@Site'),
-    not_null={"@MeasurementDateGMT", "@Value", "@Site"},
-    column_order=("@MeasurementDateGMT", "@Value", "@Site"))
-
-functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM10_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
-    not_null={"@Year", "@Value", "@SiteName"},
-    column_order=("@Year", "@Value", "@SiteName"))
-
-functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM25_annually',pk=('@Year', '@SiteName','@ObjectiveName'),
-    not_null={"@Year", "@Value", "@SiteName"},
-    column_order=("@Year", "@Value", "@SiteName"))
-
-functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM10_hourly',pk=('@MeasurementDateGMT', '@Site'),
-    not_null={"@MeasurementDateGMT", "@Value", "@Site"},
-    column_order=("@MeasurementDateGMT", "@Value", "@Site"))
-
-functions.add_sqlite_table(db=sqlite_utils.Database("air-sensors.db"),tablename='PM25_hourly',pk=('@MeasurementDateGMT', '@Site'),
     not_null={"@MeasurementDateGMT", "@Value", "@Site"},
     column_order=("@MeasurementDateGMT", "@Value", "@Site"))
 
@@ -141,99 +115,6 @@ while StartWeekDate > StartDate :
         EndWeekDate = StartWeekDate
         StartWeekDate = EndWeekDate - timedelta(weeks = 6)
 
-#%%
-
-#functions.delete_all_sql(conn, sql='DELETE FROM PM25_hourly')
-
-#EndDate = date.today() + timedelta(days = 1)
-#EndWeekDate = EndDate
-#StartWeekDate = EndDate - timedelta(weeks = 2)
-#StartDate = StartWeekDate - timedelta(days = 1)
-
-#while StartWeekDate > StartDate :
- #       for el in sites:
- #           def convert(list):
-#              list['@Value'] = float(list['@Value'])
-#                list['@Site'] = el['@SiteName']
- #               return list
-  #          url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM25/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
-   #         print(url)
-    #        req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-     #       print(req)
-      #      j = req.json()
-       #     # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
-#            filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
- #           if len(filtered) != 0:
-  #              filtered = map(convert, filtered)
-   #             filteredList = list(filtered)
-    #            db['PM25_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
-     #   EndWeekDate = StartWeekDate
-      #  StartWeekDate = EndWeekDate - timedelta(weeks = 2)
-
-#%%
-
-#conn=create_connection('air-sensors.db')
-#functions.delete_all_sql(conn, sql='DELETE FROM PM10_hourly')
-
-#EndDate = date.today() + timedelta(days = 1)
-#EndWeekDate = EndDate
-#StartWeekDate = EndDate - timedelta(weeks = 2)
-#StartDate = StartWeekDate - timedelta(days = 1)
-
-#while StartWeekDate > StartDate :
-#        for el in sites:
-#            def convert(list):
-#                list['@Value'] = float(list['@Value'])
-#                list['@Site'] = el['@SiteName']
-#                return list
-#            url = f'https://api.erg.ic.ac.uk/AirQuality/Data/SiteSpecies/SiteCode={el["@SiteCode"]}/SpeciesCode=PM10/StartDate={StartWeekDate.strftime("%d %b %Y")}/EndDate={EndWeekDate.strftime("%d %b %Y")}/Json'
-#            print(url)
- #           req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-  #          print(req)
-#            j = req.json()
-#            # CLEAN SITES WITH NO DATA OR ZERO VALUE OR NOT NO2 (ONLY MEASURE AVAILABLE AT ALL SITES)
- #           filtered = [a for a in j['RawAQData']['Data'] if a['@Value'] != '' and a['@Value'] != '0' ] #removes zero and missing values 
- #           if len(filtered) != 0:
- #               filtered = map(convert, filtered)
- #               filteredList = list(filtered)
- #               db['PM10_hourly'].upsert_all(filteredList,pk=('@MeasurementDateGMT', '@Site')) #combo of update and insert, updates record if it already exists if not creates it 
- #       EndWeekDate = StartWeekDate
-#        StartWeekDate = EndWeekDate - timedelta(weeks = 2)
-
-
-
-
-#%%
-#years=list(range(1994,2024))
-
-#for year in years:    
-#   url = f'https://api.erg.ic.ac.uk/AirQuality/Annual/MonitoringObjective/GroupName=towerhamlets/Year={year}/Json'
-#   print(url)
-#   req = requests.get(url, headers={'Connection':'close'}) #closes connection to the api
-#   print(req)
-#   j = req.json()
-#   l=j['SiteObjectives']['Site']
-#   rows=[]
-#   for data in l:
-#        data_row=data['Objective']
-#        n=data['@SiteName']
-#
-#        for row in data_row:
-#            row['@SiteName']= n
-#           rows.append(row)
-    
-#filtered_NO2 = [a for a in rows if a['@SpeciesCode']=='NO2']
-#db['NO2_annually'].upsert_all(filtered_NO2,pk=('@Year', '@SiteName', '@ObjectiveName'))
-   
-#filtered_ozone = [a for a in rows if a['@SpeciesCode']=='O3']
-#db['O3_annually'].upsert_all(filtered_ozone,pk=('@Year', '@SiteName', '@ObjectiveName'))
- 
-#filtered_PM10 = [a for a in rows if a['@SpeciesCode']=='PM10']
-#db['PM10_annually'].upsert_all(filtered_PM10,pk=('@Year', '@SiteName', '@ObjectiveName'))
- 
-#filtered_PM25 = [a for a in rows if a['@SpeciesCode']=='PM25']
-#db['PM25_annually'].upsert_all(filtered_PM25,pk=('@Year', '@SiteName', '@ObjectiveName'))
- 
 
 # %%
 #set up streamlit page 
@@ -253,7 +134,7 @@ image = functions.get_image("logo.png") # path of the file
 st.sidebar.image(image, use_column_width=True)
 st.sidebar.header(":black[Filter your data]")
 
-pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone', 'PM2.5','PM10'))
+pollutant= st.sidebar.selectbox('Choose a pollutant', options= ('NO2', 'Ozone'))
 
 #%%
 
@@ -578,130 +459,3 @@ if pollutant =='Ozone':
         ''')
 
 
-#%%
-
-#make PM2.5 page
-
-if pollutant =='PM2.5':
-     st.subheader('Particulate Matter (PM2.5)')
-     st.write('''Particulate matter (PM) is everything in the air that is not a gas and therefore consists of a huge variety of chemical compounds and materials,
-       some of which can be toxic. Due to the small size of many of the particles that form PM some of these toxins may enter the bloodstream and be transported around the body, 
-       lodging in the heart, brain and other organs. Therefore, exposure to PM can result in serious impacts to health, especially in vulnerable groups of 
-       people such as the young, elderly, and those with respiratory problems.
-     ''')
-     
-     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM2.5 in the UK must not exceed
-     an annual average of 25 µg/m3
-     ''')
-     
-     fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
-           """SELECT * 
-               FROM PM25_annually
-              WHERE
-                [@ObjectiveName] = '25 ug/m3 as an annual mean'; """),
-                 
-                  x= '@Year', y= '@Value', color='@SiteName',width=1200, height= 700)
-
-     fig.update_layout(title={
-            'text': 'Bar plot showing annual average PM2.5 concentration from active sensors in Tower Hamlets','xanchor': 'left',
-            'yanchor': 'top','x':0.05,'y':0.98},
-                            xaxis_title='Year',
-                            yaxis_title='Annual Mean PM2.5 Concentration (µg/m<sup>3</sup>)',
-                            #legend=dict(orientation="h", entrywidth=250,
-                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 17)
-                            )
-
-     fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
-     fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
-
-            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
-
-     fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
-
-     fig.update_layout(hoverlabel = dict(
-                font_size = 16))
-            
-     fig.update_layout(xaxis = dict(
-            tickmode = 'linear',
-            tick0 = 2022,
-             dtick = 1
-               ))
-
-     fig.add_hline(y=25,line_dash='dot')
-
-            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
-
-     fig.show()
-
-     st.plotly_chart(fig, theme=None)    
-
-     st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM2.5. Measurements
-            began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
-            So far in 2023 the PM2.5 concentration at Jubilee park is within the target value.
-        ''')
-            
-
-#%%
-
-#make PM10 page
-
-if pollutant =='PM10':
-     st.subheader('Particulate Matter (PM10)')
-     st.write('''Particulate matter (PM) is everything in the air that is not a gas and therefore consists of a huge variety of chemical compounds and materials,
-       some of which can be toxic. Due to the small size of many of the particles that form PM some of these toxins may enter the bloodstream and be transported around the body, 
-       lodging in the heart, brain and other organs. Therefore, exposure to PM can result in serious impacts to health, especially in vulnerable groups of 
-       people such as the young, elderly, and those with respiratory problems.
-     ''')
-     
-     st.write('''The Air Quality Standards Regulations 2010 require that concentrations of PM10 in the UK must not exceed
-     an annual average of 40 µg/m3
-     ''')
-     
-     fig = px.bar(functions.sql_to_pandas(db='air-sensors.db', sql_command=
-           """SELECT * 
-               FROM PM10_annually
-              WHERE
-                [@ObjectiveName] = '40 ug/m3 as an annual mean'; """),
-                 
-                  x= '@Year', y= '@Value', color='@SiteName',width=1200, height= 700)
-
-     fig.update_layout(title={
-            'text': 'Bar plot showing annual average PM10 concentration from active sensors in Tower Hamlets','xanchor': 'left',
-            'yanchor': 'top','x':0.05,'y':0.98},
-                            xaxis_title='Year',
-                            yaxis_title='Annual Mean PM10 Concentration (µg/m<sup>3</sup>)',
-                            #legend=dict(orientation="h", entrywidth=250,
-                            #yanchor="bottom", y=1.02, xanchor="right", x=1),
-                            legend_title_text= '', font=dict(size= 17)
-                            )
-
-     fig.update_xaxes(title_font=dict(size=22), tickfont=dict(size=18),range = [2023,2023])
-     fig.update_yaxes(title_font=dict(size=22), tickfont=dict(size=18))
-
-            #print("plotly express hovertemplate:", fig.data[0].hovertemplate)
-
-     fig.update_traces(hovertemplate='<b>Measurement time (GMT) = </b>%{x}<br><b>Value = </b>%{y}<extra></extra>')
-
-     fig.update_layout(hoverlabel = dict(
-                font_size = 16))
-            
-     fig.update_layout(xaxis = dict(
-            tickmode = 'linear',
-            tick0 = 2022,
-             dtick = 1
-               ))
-
-     fig.add_hline(y=40,line_dash='dot')
-
-            #fig.add_annotation(x=20,y=40, text='Maximum target concentration', showarrow=False,yshift=10)
-
-     fig.show()
-
-     st.plotly_chart(fig, theme=None)    
-
-     st.write(''' The sensor at Jubilee park is the first and only sensor measuring PM10. Measurements
-            began in 2023, but are currently only avaialable as an annual mean with no hourly measurements available.
-            So far in 2023 the PM10 concentration at Jubilee park is within the target value.
-        ''')
-            
