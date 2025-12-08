@@ -1,55 +1,66 @@
-#%%
 import pandas as pd
 import sqlite3
 from PIL import Image
 
 
-#%%
-def add_sqlite_table(db,tablename, pk, not_null, column_order):
-    table=db.table(
-        tablename,
-        pk=pk,
-        not_null=not_null,
-        column_order=column_order
-
-    )
-# %%
-
-def sql_to_pandas(db, sql_command,):
-    '''turns sqlite database into a pandas dataframe'''
-
-    conn= sqlite3.connect(db)
-    sql= sql_command
-    data = pd.read_sql(sql, conn)
-    
-    return data
+def add_sqlite_table(db, tablename, pk, not_null, column_order):
+    """
+    Create a SQLite table using sqlite-utils if it does not already exist.
+    """
+    try:
+        db.table(
+            tablename,
+            pk=pk,
+            not_null=not_null,
+            column_order=column_order
+        )
+    except Exception as e:
+        print(f"Warning: Could not create table '{tablename}' (it may already exist). Error: {e}")
 
 
-# %%
-def get_image(path:str)->Image:
-    image = Image.open(path)
-    return image
+def sql_to_pandas(db, sql_command):
+    """
+    Run an SQL query and return the result as a pandas DataFrame.
+    """
+    try:
+        conn = sqlite3.connect(db)
+        df = pd.read_sql(sql_command, conn)
+        conn.close()
+        return df
+    except Exception as e:
+        print(f"SQL query failed: {e}")
+        return pd.DataFrame()
 
-#%%
+
+def get_image(path: str) -> Image:
+    """
+    Load an image from disk.
+    """
+    try:
+        return Image.open(path)
+    except Exception as e:
+        print(f"Could not load image: {path}. Error: {e}")
+        return None
+
+
 def delete_all_sql(conn, sql):
     """
-    Delete all rows in the tasks table
-    :param conn: Connection to the SQLite database
-    :return:
+    Execute a DELETE SQL command on a table.
     """
-    sql = sql
-    cur = conn.cursor()
-    cur.execute(sql)
-    conn.commit()
+    try:
+        cur = conn.cursor()
+        cur.execute(sql)
+        conn.commit()
+    except Exception as e:
+        print(f"Failed to delete rows: {e}")
 
-#%%
+
 def create_connection(db_file):
-    """ create a database connection to the SQLite database
-        specified by the db_file
-    :param db_file: database file
-    :return: Connection object or None
     """
-    conn = sqlite3.connect(db_file)
-
-    return conn
-# %%
+    Create a connection to an SQLite database.
+    """
+    try:
+        return sqlite3.connect(db_file)
+    except Exception as e:
+        print(f"Failed to connect to DB '{db_file}': {e}")
+        return None
