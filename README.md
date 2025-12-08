@@ -1,17 +1,84 @@
-# Tower Hamlets air quality dashbaord 
+# Tower Hamlets Air Quality Dashboard
 
-Link to dashboard (https://st-augustine-air-quality-dashboard-v2-main-vvrhjv.streamlit.app/#air-quality-dashboard)
+🌐 **Live Dashboard:**  
+https://airqualitydashboardlbth.streamlit.app/
 
- This project has allowed me to apply knowledge I have gained from the graduate program with ONS as well as learning about new data science relevant software features such as GitHub Actions and SQLite.  The key skills I have taken away are...
+---
 
- - Creating and querying a SQLite database using the SQLite-utils3 package in Python, db querying was also supported by practising and formatting queries in Datasette
- 
-- Automation of the dashboard to display live air quality data using the auto-refresh feature in Streamlit, as well as GitHub Actions to run main.py python file every hour and commit new copy of db to repository
- 
-- Accessing a live API using control flow knowledge (i.e. loops, list comprehensions), and piping data points into a SQLite table 
- 
-- Managing performance of dashboard (how quickly it loads) by cleaning up code. For example, code for creating yearly means tables is commented out as this is not live data so does not need to be refreshed every time the dashboard loads
- 
-- Making use of modular programming techniques by creating a separate functions.py file, this improves the readability and organisation of my code
+## Overview
 
-- Getting used to coding directly in a Python file rather than a notebook, as this improves efficiency when integrating with Streamlit
+This project delivers a **fully automated, real-time air quality monitoring dashboard** for Tower Hamlets using open data from the Environmental Research Group (ERG) at King’s College London.
+
+The dashboard presents clear, client-ready insights into pollutant trends using **live API ingestion, automated data engineering pipelines, and interactive visualisation** — without requiring any manual intervention.
+
+It is designed to be:
+
+- **Reliable** – data automatically refreshes hourly  
+- **Transparent** – all historical records stored in a structured SQLite database  
+- **Accessible** – interactive visual analytics via Streamlit  
+- **Lightweight & maintainable** – optimised for fast loading and stable performance  
+
+---
+
+## Key Features
+
+### 📡 Live Data Ingestion
+- Automatically retrieves air quality readings from the London Air Quality Network API.  
+- Includes full ETL flow: API → validation → filtering → typed data → SQLite storage.
+
+### 🗄️ Robust Data Engineering (SQLite)
+- Clean, relational data model for pollutants (NO₂ and O₃).  
+- Structured tables for hourly and annual measures.  
+- Uses SQLite-utils for consistent schema definition, constraints, and upserts.
+
+### ⚙️ Automation
+- Scheduled updates via **GitHub Actions** run hourly, rebuilding the database and ensuring the dashboard stays up-to-date.  
+- Streamlit auto-refresh triggers live updates for users.
+
+### 📊 Interactive Visualisation
+- Clear trend lines for annual pollutant levels, regulatory limit exceedances, and sensor capture rates.  
+- Intuitive UI allowing users to filter by pollutant and metric.  
+- Highlights whether annual/limit thresholds are being exceeded.
+
+### ⚡ High Performance
+- Removed unnecessary recomputation to ensure fast loading times.  
+- Optimised API calls and selective data refreshes reduce bandwidth and processing load.
+
+### 🧩 Clean Code Architecture
+- Separation of concerns using a dedicated `functions.py` module.  
+- Modular design supports scalability — new pollutant types or endpoints can be added easily.
+
+---
+
+## Impact & Use Cases
+
+This dashboard demonstrates how modern data engineering and automation can support:
+
+### **Local Government & Public Health**
+- Track compliance with UK air quality targets.  
+- Identify long-term trends and periods of poor air quality.  
+- Support environmental reporting and community transparency.
+
+### **Consultancy & Analytics Work**
+- Shows capability in building fully automated data pipelines.  
+- Demonstrates deployable, client-facing interactive products.  
+- Highlights expertise in real-time data, API integration, and cloud-based dashboards.
+
+### **Environmental, Scientific & Urban Planning Applications**
+- Monitor pollution hotspots  
+- Support hypothesis testing and intervention analysis  
+- Provide evidence for policy decisions  
+
+---
+
+## Tech Stack
+
+- **Python**  
+- **Streamlit**  
+- **SQLite / sqlite-utils**  
+- **GitHub Actions**  
+- **Plotly**  
+- **Pandas**  
+- **Requests**  
+- **Datasette**  
+- **PIL**
