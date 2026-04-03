@@ -9,7 +9,7 @@ https://airqualitydashboardlbth.streamlit.app/
 
 This project delivers a **fully automated, real-time air quality monitoring dashboard** for Tower Hamlets using open data from the Environmental Research Group (ERG) at King’s College London.
 
-The dashboard presents clear, client-ready insights into pollutant trends using **live API ingestion, automated data engineering pipelines, and interactive visualisation** — without requiring any manual intervention.
+The dashboard presents clear, client-ready insights into pollutant trends using **live API ingestion, automated data engineering pipelines, and interactive visualisation** - without requiring any manual intervention.
 
 It is designed to be:
 
@@ -46,7 +46,7 @@ It is designed to be:
 
 ### 🧩 Clean Code Architecture
 - Separation of concerns using a dedicated `functions.py` module.  
-- Modular design supports scalability — new pollutant types or endpoints can be added easily.
+- Modular design supports scalability - new pollutant types or endpoints can be added easily.
 
 ---
 
